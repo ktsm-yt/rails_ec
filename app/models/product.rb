@@ -4,6 +4,7 @@ with_options presence: true do
   validates :description
   validates :price
   validates :stock
+  validates :image
 end
 has_one_attached :image #Active recode
 end
