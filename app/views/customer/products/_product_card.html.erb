@@ -5,12 +5,17 @@
       <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
     <% end %>
     <!-- Product image-->
-    <img class="card-img-top" src="<%= product.image_url %>" alt="<%= product.name %>" />
+    <%= link_to product_path(product) do %>
+      <img class="card-img-top" src="<%= product.image_url %>" alt="<%= product.name %>" />
+    <% end %>
     <!-- Product details-->
     <div class="card-body p-4">
         <div class="text-center">
             <!-- Product name-->
-            <h5 class="fw-bolder"><%= product.name %></h5>
+            <%= link_to product_path(product), class: "text-decoration-none text-dark" do %>
+              <h5 class="fw-bolder"><%= product.name %></h5>
+            <% end %>
+
             <!-- Product reviews-->
             <%= if product.rating && product.rating.to_i > 0 %>
               <div class="d-flex justify-content-center small text-warning mb-2">
@@ -33,9 +38,9 @@
     <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
       <div class="text-center">
       <% if product.price_range? %>
-        <a class="btn btn-outline-dark mt-auto" href="">View options</a></div>
+        <%= link_to "View options", product_path(product), class="btn btn-outline-dark mt-auto" > %>
       <% else %>
-        <a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
+        <%= link_to "Add to cart", class="btn btn-outline-dark mt-auto" > %>
       <% end %>
     </div>
   </div>
