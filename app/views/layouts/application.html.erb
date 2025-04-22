@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Rails_EC</title>
+    <title>Rails_EC_Site</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -9,6 +9,9 @@
     <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
   </head>
   <body>
+  <!-- Navigation-->
+    <%= render 'layouts/navigation' %>
+  <!-- Page content -->
     <%= yield %>
   </body>
 </html>

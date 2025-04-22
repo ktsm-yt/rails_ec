@@ -2,7 +2,7 @@
 
 Rails.application.routes.draw do
   
-  root to: "customer/product#index"
+  root to: "customer/products#index"
 
   scope module: :customer do
     resources :products, only: %i[index show]

@@ -19,8 +19,4 @@ class Product < ApplicationRecord
   def price_range?
     original_price.present? && (price != original_price)
   end
-
-  # def price_range?
-  #   old_max_price.present? && (old_min_price != old_max_price)
-  # end
 end
