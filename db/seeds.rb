@@ -7,6 +7,7 @@
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
 Product.destroy_all
+Tasks.destroy_all
 
 Product.create!([
   # Fancy Product: 通常価格 $40.00 (価格範囲ではなくなった)
@@ -27,5 +28,5 @@ Product.create!([
   # Popular Item: 通常価格 $40.00
   { name: "Popular Item", price: 40.00, original_price: 40.00, rating: 5, image_url: "https://dummyimage.com/450x300/dee2e6/6c757d.jpg", on_sale: false }
 ])
-
+product.save(validate: false)
 puts "Created #{Product.count} products."
