@@ -2,12 +2,11 @@
 
 Rails.application.routes.draw do
   
-  root to: 'products#index'
+  root to: "customer/product#index"
 
   scope module: :customer do
-    resources :products
+    resources :products, only: %i[index show]
   end
-  
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Defines the root path route ("/")
