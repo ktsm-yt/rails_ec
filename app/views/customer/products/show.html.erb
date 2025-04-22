@@ -66,8 +66,8 @@
                         </div>
 
                         <div class="fs-5 mb-5">
-                            <% if @product.on_sale? && @product.old_price.present? %>
-                                <span class="text-decoration-line-through"><%= number_to_currency(@product.old_price) %></span>
+                            <% if @product.on_sale? && @product.price.present? %>
+                                <span class="text-decoration-line-through"><%= number_to_currency(@product.price) %></span>
                             <% end %>
                             <% if @product.price_range? %>
                                 <%= @product.price %>
@@ -91,16 +91,17 @@
         </section>
         <!-- Related items section-->
         <% if @related_products.present? %>
-        <section class="py-5 bg-light">
-            <div class="container px-4 px-lg-5 mt-5">
-                <h2 class="fw-bolder mb-4">Related products</h2>
-                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-                    <% @related_products.each do |product| %>
-                        <%= render partial: 'products/product_card', locals: { product: product } %>
-                    <% end %>
+            <section class="py-5 bg-light">
+                <div class="container px-4 px-lg-5 mt-5">
+                    <h2 class="fw-bolder mb-4">Related products</h2>
+                    <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                        <% @related_products.each do |product| %>
+                            <%= render partial: 'customer/products/product_card', locals: { product: product } %>
+                        <% end %>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
+        <% end %>
         <!-- Footer-->
         <footer class="py-5 bg-dark">
             <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2023</p></div>

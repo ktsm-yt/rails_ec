@@ -9,15 +9,18 @@ class Product < ApplicationRecord
   end
   has_one_attached :image #Active recode
 
+
+
+
   def discounted?
     original_price.present? && original_price > price
   end
 
   def price_range?
-    max_price.present? && (min_price != max_price)
+    original_price.present? && (price != original_price)
   end
 
-  def old_price_range?
-    old_max_price.present? && (old_min_price != old_max_price)
-  end
+  # def price_range?
+  #   old_max_price.present? && (old_min_price != old_max_price)
+  # end
 end
