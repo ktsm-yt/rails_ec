@@ -7,6 +7,9 @@ class Customer::ProductsController < ApplicationController
 
   def show
     @product = Product.find(params[:id])
+    @related_products = Product.order(created_at: :desc)
+                             .where.not(id: @product.id)
+                             .limit(4)
   end
 
   private
