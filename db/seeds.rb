@@ -11,9 +11,6 @@
 # 既存のデータをクリア
 Product.destroy_all
 
-# Tasksの参照を削除（Tasksモデルが存在しない）
-# Tasks.destroy_all の行を削除
-
 products = [
   # Fancy Product: 通常価格 $40.00
   { name: "Fancy Product", price: 40.00, original_price: 40.00, image_url: "https://dummyimage.com/450x300/dee2e6/6c757d.jpg", on_sale: false, description: "A fancy product for special occasions." },
