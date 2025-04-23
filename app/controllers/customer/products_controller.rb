@@ -1,11 +1,12 @@
 class Customer::ProductsController < ApplicationController
   def index
-    @products = Product.all
+    @products = Product.includes(image_attachment: :blob).all
   end
 
   def show
-    @product = Product.find(params[:id])
-    @related_products = Product.order(created_at: :desc)
+    @product = Product.includes(image_attachment: :blob).find(params[:id])
+    @related_products = Product.includes(image_attachment: :blob)
+                               .order(created_at: :desc)
                                .where.not(id: @product.id)
                                .limit(4)
   end
