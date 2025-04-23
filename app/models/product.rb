@@ -7,10 +7,7 @@ class Product < ApplicationRecord
     validates :price
     validates :original_price
   end
-  has_one_attached :image #Active recode
-
-
-
+  has_one_attached :image # Active recode
 
   def discounted?
     original_price.present? && original_price > price

@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  
-  root to: "customer/products#index"
+  root to: 'customer/products#index'
 
   scope module: :customer do
     resources :products, only: %i[index show]
