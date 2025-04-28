@@ -3,6 +3,10 @@
 Rails.application.routes.draw do
   root to: 'customer/products#index'
 
+  namespace :admin do
+    resources :products, only: %i[index show new create edit update destroy]
+  end
+
   scope module: :customer do
     resources :products, only: %i[index show]
   end
