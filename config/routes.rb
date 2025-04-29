@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   root to: 'customer/products#index'
 
   namespace :admin do
+    root to: 'products#index'
     resources :products, only: %i[index show new create edit update destroy]
   end
 
