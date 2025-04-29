@@ -1,2 +1,9 @@
-<h1>Admin::Products#index</h1>
-<p>Find me in app/views/admin/products/index.html.erb</p>
+<section class="py-5">
+    <div class="container px-4 px-lg-5 mt-5">
+        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+            <% @products.each do |product| %>
+                <%= render partial: 'customer/products/product_card', locals: {product: product} %>
+            <% end %>
+        </div>
+    </div>
+</section>

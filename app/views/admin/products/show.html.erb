@@ -1,2 +1,50 @@
-<h1>Admin::Products#show</h1>
-<p>Find me in app/views/admin/products/show.html.erb</p>
+<section class="py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="row gx-4 gx-lg-5 align-items-center">
+            <div class="col-md-6">
+            <%= image_tag @product.image.variant(resize_to_limit:[600,700]), class:"card-img-top mb-5 mb-md-0", alt: @product.name %>
+            </div>
+
+            <div class="col-md-6">
+              <% if @product.on_sale? %>
+                  <div class="badge bg-dark text-white position-relative" style="top: -1rem;right:0;">Sale</div>
+              <% end %>
+
+                <div class="small mb-1">SKU: BST-498</div>
+                <h1 class="display-5 fw-bolder"><%= @product.name %></h1>
+
+                <div class="d-flex small text-warning mb-2">
+                <% @product.rating.to_i.times do %>
+                    <div class="bi-star-fill"></div>
+                <% end %>
+                </div>
+
+                <div class="fs-5 mb-5">
+                    <% if @product.on_sale? && @product.price.present? %>
+                        <span class="text-decoration-line-through"><%= number_to_currency(@product.price) %></span>
+                    <% end %>
+                    <% if @product.price_range? %>
+                        <%= @product.price %>
+                    <% else %>
+                        <%= number_to_currency(@product.price) %>
+                    <% end %>
+                </div>
+                
+                <p class="lead"><%= @product.description %></p>
+                
+                <div class="d-flex gap-2">
+                    <%= link_to edit_admin_product_path(@product), class: "btn btn-outline-dark flex-shrink-0" do %>
+                      Edit
+                    <% end %>
+                
+                    <%=link_to admin_product_path(@product),
+                      class: "btn btn-outline-danger flex-shrink-0",
+                      data: {turbo_confirm: "本当に「#{@product.name}を削除してよろしいですか?」"},
+                      method: :delete do %>
+                      Delete
+                    <% end %>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
