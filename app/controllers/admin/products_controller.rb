@@ -1,4 +1,5 @@
 class Admin::ProductsController < ApplicationController
+  http_basic_authenticate_with name: 'username', password: 'password'
   before_action :set_product, only: %i[show edit update destroy]
   def index
     @products = Product.all
