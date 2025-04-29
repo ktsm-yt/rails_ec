@@ -32,16 +32,11 @@
                 <p class="lead"><%= @product.description %></p>
                 
                 <div class="d-flex gap-2">
-                    <%= link_to edit_admin_product_path(@product), class: "btn btn-outline-dark flex-shrink-0" do %>
-                      Edit
-                    <% end %>
-                
-                    <%=link_to admin_product_path(@product),
+                    <%= link_to "編集", edit_admin_product_path(@product), class: "btn btn-outline-dark flex-shrink-0" %>
+                    <%= link_to "削除", admin_product_path(@product),
                       class: "btn btn-outline-danger flex-shrink-0",
                       data: {turbo_confirm: "本当に「#{@product.name}を削除してよろしいですか?」"},
-                      method: :delete do %>
-                      Delete
-                    <% end %>
+                      method: :delete %>
                 </div>
             </div>
         </div>
