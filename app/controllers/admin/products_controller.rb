@@ -5,8 +5,7 @@ class Admin::ProductsController < ApplicationController
     @products = Product.all
   end
 
-  def show
-  end
+  def show; end
 
   def new
     @product = Product.new
@@ -21,8 +20,7 @@ class Admin::ProductsController < ApplicationController
     end
   end
 
-  def edit
-  end
+  def edit; end
 
   def update
     if @product.update(product_params)
@@ -32,16 +30,14 @@ class Admin::ProductsController < ApplicationController
     end
   end
 
-  def destroy
-  end
-
+  def destroy; end
 
   private
-  
+
   def set_product
     @product = Product.find(params[:id])
   end
-  
+
   def product_params
     params.require(:product).permit(:name, :description, :price, :stock, :image)
   end

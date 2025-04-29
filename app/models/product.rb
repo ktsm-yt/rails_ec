@@ -16,15 +16,15 @@ class Product < ApplicationRecord
     original_price.present? && (price != original_price)
   end
 
-
   # original_priceが存在するとき,validateを執行する。
   validate :validate_original_price, if: -> { original_price.present? }
-  
+
   private
+
   # validationを変更
   def validate_original_price
-    if original_price < price
-      errors.add(:original_price, "は現在価格以上の金額を設定してください")
-    end
+    return unless original_price < price
+
+    errors.add(:original_price, 'は現在価格以上の金額を設定してください')
   end
 end
