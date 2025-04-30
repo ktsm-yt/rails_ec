@@ -38,11 +38,7 @@
     <!-- Product actions-->
     <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
       <div class="text-center">
-        <% if product.price_range? %>
-          <%= link_to "View options", product_path(product), class: "btn btn-outline-dark mt-auto" %>
-        <% else %>
           <%= link_to "Add to cart", "#", class: "btn btn-outline-dark mt-auto" %>
-        <% end %>
       </div>
     </div>
   </div>
