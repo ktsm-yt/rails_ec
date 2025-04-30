@@ -1,5 +1,5 @@
 class Admin::ProductsController < ApplicationController
-  http_basic_authenticate_with name: 'username', password: 'password'
+  http_basic_authenticate_with name: 'admin', password: 'pw'
   before_action :set_product, only: %i[show edit update destroy]
   def index
     @products = Product.includes(image_attachment: :blob).all
@@ -14,7 +14,7 @@ class Admin::ProductsController < ApplicationController
   def create
     @product = Product.new(product_params)
     if @product.save
-      redirect_to admin_products_path, notice: "商品を登録しました"
+      redirect_to admin_products_path, notice: '商品を登録しました'
     else
       render :new
     end
@@ -24,7 +24,7 @@ class Admin::ProductsController < ApplicationController
 
   def update
     if @product.update(product_params)
-      redirect_to admin_products_path(@product), notice: "更新しました"
+      redirect_to admin_products_path(@product), notice: '更新しました'
     else
       render :edit
     end
@@ -32,7 +32,7 @@ class Admin::ProductsController < ApplicationController
 
   def destroy
     @product.destroy
-    redirect_to admin_products_path, notice: "商品を削除しました"
+    redirect_to admin_products_path, notice: '商品を削除しました'
   end
 
   private
