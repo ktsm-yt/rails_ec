@@ -7,6 +7,7 @@ class Product < ApplicationRecord
     validates :price
   end
   has_one_attached :image # Active recode
+  has_many :cart_items, dependent: :destroy
 
   def discounted?
     original_price.present? && original_price > price
@@ -27,4 +28,5 @@ class Product < ApplicationRecord
 
     errors.add(:original_price, 'は現在価格以上の金額を設定してください')
   end
+  
 end
