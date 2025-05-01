@@ -28,5 +28,4 @@ class Product < ApplicationRecord
 
     errors.add(:original_price, 'は現在価格以上の金額を設定してください')
   end
-  
 end
