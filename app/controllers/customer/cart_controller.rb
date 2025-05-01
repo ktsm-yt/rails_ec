@@ -6,7 +6,8 @@ class Customer::CartController < ApplicationController
   # current_cartは現在のユーザーセッションに関連付けられているカートobj
   def add_item
     product = Product.find(params[:product_id]) # Product.objを見つけ
-    @current_cart.add_product(product) # Cartクラスのメソッド
+    quantity = params[:quantity].present? ? params[:quantity].to_i : 1 # nilなら1に
+    @current_cart.add_product(product, quantity) # 数量を渡してadd_productを呼び出し
     @current_cart.save # DBへ保存し,カートを離れても有効に
 
     redirect_to customer_cart_path, notice: '商品をカートに追加しました'

@@ -18,13 +18,7 @@
 
           <ul class="list-group mb-3">
             <%= @cart_items.each do |items|%>
-            <li class="list-group-item d-flex justify-content-between lh-sm">
-              <div>
-                <h6 class="my-0"><%= item.product.name %></h6>
-                <small class="text-body-secondary">Brief description</small>
-              </div>
-              <span class="text-body-secondary"><%= number_to_currency(item.product.price) %></span>
-            </li>∫
+              <%= render partial: 'customer/cart/cart_item', locales: {item: item} %>
             <% end %>
             <%# <li class="list-group-item d-flex justify-content-between bg-body-tertiary">
               <div class="text-success">

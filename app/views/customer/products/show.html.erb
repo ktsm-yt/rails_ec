@@ -31,14 +31,16 @@
                 </div>
                 
                 <p class="lead"><%= @product.description %></p>
-                
-                <div class="d-flex">
-                    <input class="form-control text-center me-3" id="inputQuantity" type="num" value="1" style="max-width: 3rem" />
-                    <button class="btn btn-outline-dark flex-shrink-0" type="button">
-                        <i class="bi-cart-fill me-1"></i>
-                        Add to cart
-                    </button>
-                </div>
+                <%= form_with url: add_item_customer_cart_path(product_id: @product.id), method: :post, local: true do |form| %>
+                    <div class="d-flex">
+                        <%= number_field_tag :quantity, 1, min: 1, max: 99,
+                            class: "form-control text-center me-3",
+                            style: "max-width: 3rem" %>
+                        <%= form.button class:"btn btn-outline-dark flex-shrink-0", type: "submit" do %>
+                            <i class="bi-cart-fill me-1"></i> Add to cart
+                        <% end %>
+                    </div>
+                <% end %>
             </div>
         </div>
     </div>
