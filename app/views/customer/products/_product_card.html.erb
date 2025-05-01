@@ -38,7 +38,9 @@
     <!-- Product actions-->
     <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
       <div class="text-center">
-          <%= link_to "Add to cart", "#", class: "btn btn-outline-dark mt-auto" %>
+          <%= button_to "Add to cart", add_item_customer_cart_path,
+            params: {product_id: product.id},
+            class: "btn btn-outline-dark mt-auto" %>
       </div>
     </div>
   </div>

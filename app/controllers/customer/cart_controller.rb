@@ -9,7 +9,7 @@ class Customer::CartController < ApplicationController
     @current_cart.add_product(product) # Cartクラスのメソッド
     @current_cart.save # DBへ保存し,カートを離れても有効に
 
-    redirect_to cart_path, notice: '商品をカートに追加しました'
+    redirect_to customer_cart_path, notice: '商品をカートに追加しました'
   end
 
   def update_item # カートの数値の直接更新
@@ -23,19 +23,19 @@ class Customer::CartController < ApplicationController
       flash[:notice] = 'カートから商品を削除しました'
     end
 
-    redirect_to cart_path
+    redirect_to customer_cart_path
   end
 
   def remove_item # ゴミ箱ボタンにするか
     cart_item = @current_cart.cart_items.find(params[:id])
     cart_item.destroy
 
-    redirect_to cart_path, notice: 'カートから商品を削除しました'
+    redirect_to customer_cart_path, notice: 'カートから商品を削除しました'
   end
 
   def destroy # 全削除
     @current_cart.cart_items.destroy_all
-    redirect_to cart_path, notice: 'カートを空にしました'
+    redirect_to customer_cart_path, notice: 'カートを空にしました'
   end
 
 
