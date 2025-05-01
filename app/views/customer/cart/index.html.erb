@@ -22,7 +22,7 @@
             <td><%= item.product.name %></td>
             <td><%= number_to_currency(item.product.price) %></td>
             <td>
-              <%= form_with url: update_item_customer_cart_path(item), data: {turbo_method: :patch} do %>
+              <%= form_with url: update_item_customer_cart_path(item), method: :patch, data: { turbo: false } do %>
                 <%= number_field_tag :quantity, item.quantity, min: 1, max: 99 %>
                 <%= submit_tag '更新', class: 'btn btn-sm btn-outline-secondary' %>
               <% end %>

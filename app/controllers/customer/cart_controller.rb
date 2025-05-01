@@ -1,5 +1,5 @@
 class Customer::CartController < ApplicationController
-  before_action :set_cart_items, only: %i[update remove_item]
+  before_action :set_cart_item, only: %i[update remove_item]
   def index
     @cart_items = @current_cart.cart_items.includes(:product) # N+1
   end
@@ -14,10 +14,16 @@ class Customer::CartController < ApplicationController
 
   def update_item # カートの数値の直接更新
     cart_item = @current_cart.cart_items.find(params[:id])
+    quantity = params[:quantity].to_i
 
-    if params[:quantity] > 0
-      cart_item.update(quantity: params[:quantity])
-      flash[:notice] = '数量を更新しました'
+    if quantity > 0
+      # 数量更新に変換したquantityを使用
+      if cart_item.update(quantity: quantity)
+        flash[:notice] = '数量を更新しました'
+      else
+        # 更新に失敗した場合の処理 (例: バリデーションエラー)
+        flash[:alert] = cart_item.errors.full_messages.join(", ") # エラーメッセージを表示
+      end
     else
       cart_item.destroy
       flash[:notice] = 'カートから商品を削除しました'
@@ -26,7 +32,7 @@ class Customer::CartController < ApplicationController
     redirect_to customer_cart_path
   end
 
-  def remove_item # ゴミ箱ボタンにするか
+  def remove_item 
     cart_item = @current_cart.cart_items.find(params[:id])
     cart_item.destroy
 

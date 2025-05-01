@@ -15,6 +15,7 @@
             <span class="text-primary">Your cart</span>
             <span class="badge bg-primary rounded-pill"><%= 3 %></span>
           </h4>
+
           <ul class="list-group mb-3">
             <%= @cart_items.each do |items|%>
             <li class="list-group-item d-flex justify-content-between lh-sm">
@@ -25,7 +26,7 @@
               <span class="text-body-secondary"><%= number_to_currency(item.product.price) %></span>
             </li>∫
             <% end %>
-            <li class="list-group-item d-flex justify-content-between bg-body-tertiary">
+            <%# <li class="list-group-item d-flex justify-content-between bg-body-tertiary">
               <div class="text-success">
                 <h6 class="my-0">Promo code</h6>
                 <small>EXAMPLECODE</small>
@@ -35,7 +36,7 @@
             <li class="list-group-item d-flex justify-content-between">
               <span>Total (USD)</span>
               <strong>$20</strong>
-            </li>
+            </li> %>
           </ul>
 
           <form class="card p-2">

@@ -15,11 +15,11 @@ Rails.application.routes.draw do
         delete :destroy
       end
     end
-    patch '/cart/update_item/:id', to: 'customer/cart#update_item', as: 'update_item_customer_cart'
-    delete '/cart/remove_item/:id', to: 'customer/cart#remove_item', as: 'remove_item_customer_cart'
-    delete '/cart', to: 'cart#destroy', as: 'clear_cart'
-    post '/cart/add_item', to: 'cart#add_item', as: 'add_item_customer_cart'
     get '/cart', to: 'cart#index', as: 'customer_cart'
+    post '/cart/add_item', to: 'cart#add_item', as: 'add_item_customer_cart'
+    patch '/cart/update_item/:id', to: 'cart#update_item', as: 'update_item_customer_cart'
+    delete '/cart/remove_item/:id', to: 'cart#remove_item', as: 'remove_item_customer_cart'
+    delete '/cart', to: 'cart#destroy', as: 'clear_cart'
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 end
