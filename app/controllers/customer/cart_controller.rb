@@ -1,7 +1,7 @@
 class Customer::CartController < ApplicationController
   before_action :set_cart_item, only: %i[update_item remove_item]
   def index
-    @cart_items = @current_cart.cart_items.includes(:product) # N+1
+    @cart_items = @current_cart.cart_items.includes(:product).order(created_at: :asc) # N+1
   end
 
   # current_cartは現在のユーザーセッションに関連付けられているカートobj
@@ -43,10 +43,10 @@ class Customer::CartController < ApplicationController
   end
 
   # 全削除
-  def destroy
-    @current_cart.cart_items.destroy_all
-    redirect_to customer_cart_path, notice: 'カートを空にしました'
-  end
+  # def destroy
+  #   @current_cart.cart_items.destroy_all
+  #   redirect_to customer_cart_path, notice: 'カートを空にしました'
+  # end
 
   private
 
