@@ -11,7 +11,7 @@ class Customer::CartController < ApplicationController
     @current_cart.add_product(product, quantity) # 数量を渡してadd_productを呼び出し
     @current_cart.save # DBへ保存し,カートを離れても有効に
 
-    redirect_to customer_cart_path, notice: '商品をカートに追加しました'
+    redirect_to root_path, notice: '商品をカートに追加しました'
   end
 
   # カートの数値の直接更新
@@ -32,14 +32,14 @@ class Customer::CartController < ApplicationController
       flash[:notice] = 'カートから商品を削除しました'
     end
 
-    redirect_to customer_cart_path
+    redirect_to root_path
   end
 
   def remove_item
     cart_item = @current_cart.cart_items.find(params[:id])
     cart_item.destroy
 
-    redirect_to customer_cart_path, notice: 'カートから商品を削除しました'
+    redirect_to root_path, notice: 'カートから商品を削除しました'
   end
 
   # 全削除
