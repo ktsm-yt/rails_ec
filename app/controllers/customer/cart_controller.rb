@@ -1,4 +1,4 @@
-class Customer::CartsController < ApplicationController
+class Customer::CartController < ApplicationController
   before_action :set_cart_items, only: %i[update remove_item]
   def index
     @cart_items = @current_cart.cart_items.includes(:product) # N+1
