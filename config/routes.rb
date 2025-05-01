@@ -10,11 +10,15 @@ Rails.application.routes.draw do
 
   scope module: :customer do
     resources :products, only: %i[index show]
-    resources :cart, only: [:index]
-    post 'carts/add_item/:product_id',to: 'carts#add_item', as: :add_item
-    patch 'carts/update_item/:id', to: 'carts#update_item', as: :update_item
-    delete 'cart/remove_item/:id', to: 'carts#remove_item', as: :remove_item
-    delete 'cart', to: 'carts#destroy', as: :empty_cart
+    resources :cart, only: [:index :destroy] do
+      member do # cartのidを使用
+        patch :update_item
+        delete :remove_item
+      end
+      collection do # 不使用。商品のidで
+        post :add_item
+      end
+    end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 end
