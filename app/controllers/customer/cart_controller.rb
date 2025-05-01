@@ -22,7 +22,7 @@ class Customer::CartController < ApplicationController
       if cart_item.update(quantity: quantity)
         flash[:notice] = '数量を更新しました'
       else
-        # 更新に失敗した場合の処理 (例: バリデーションエラー)
+        # 更新に失敗したとき
         flash[:alert] = cart_item.errors.full_messages.join(", ") # エラーメッセージを表示
       end
     else

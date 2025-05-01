@@ -9,7 +9,7 @@ class Cart < ApplicationRecord
 
     if current_item
       current_item.quantity += quantity
-      current_item.save # 1増やして保存する
+      current_item.save # 保存しないと更新で消える
     else
       cart_items.build(product: product, quantity: quantity)
     end
