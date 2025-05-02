@@ -1,7 +1,6 @@
 <!-- app/views/carts/show.html.erb -->
 <div class="cart-page">
   <h1>ショッピングカート</h1>
-  
   <% if @cart_items.empty? %>
     <p>カートに商品がありません。</p>
     <%= link_to '商品一覧に戻る', products_path, class: 'btn btn-primary' %>
@@ -44,7 +43,6 @@
         </tr>
       </tfoot>
     </table>
-    
     <div class="cart-actions">
       <%= link_to 'カートを空にする', clear_cart_path, 
         data: {turbo_method: :delete, turbo_confirm: 'カートを空にしますか？'}, 
