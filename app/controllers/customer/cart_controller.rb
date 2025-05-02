@@ -32,7 +32,7 @@ class Customer::CartController < ApplicationController
       flash[:notice] = 'カートから商品を削除しました'
     end
 
-    redirect_to root_path
+    redirect_to customer_cart_path
   end
 
   def remove_item
@@ -42,11 +42,10 @@ class Customer::CartController < ApplicationController
     redirect_to root_path, notice: 'カートから商品を削除しました'
   end
 
-  # 全削除
-  # def destroy
-  #   @current_cart.cart_items.destroy_all
-  #   redirect_to customer_cart_path, notice: 'カートを空にしました'
-  # end
+  def destroy
+    @current_cart.cart_items.destroy_all
+    redirect_to customer_cart_path, notice: 'カートを空にしました'
+  end
 
   private
 

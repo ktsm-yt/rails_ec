@@ -32,8 +32,13 @@
                 <span class="text-success">−$5</span>
               <%# </li> %>
             <li class="list-group-item d-flex justify-content-between">
-              <span>Total (USD)</span>
-              <strong><%= number_to_currency(@current_cart.total_price) %></strong>
+              <%# <span>Total (USD)</span> %>
+              <%= link_to clear_cart_path, 
+                data: {turbo_method: :delete, turbo_confirm: '本当にカート内を全て削除しますか？'}, 
+                class: 'btn btn-sm btn-danger' do %>
+                  <i class="bi bi-trash"></i> カートを空にする
+              <% end %>
+              <strong>Total(USD) <%= number_to_currency(@current_cart.total_price) %></strong>
             </li>
           </ul>
           <%# <form class="card p-2">
