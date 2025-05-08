@@ -2,7 +2,7 @@ class Admin::ProductsController < ApplicationController
   http_basic_authenticate_with name: 'admin', password: 'pw'
   before_action :set_product, only: %i[show edit update destroy]
   rescue_from ActiveRecord::RecordNotFound, with: :handle_product_not_found
-  
+
   def index
     @products = Product.includes(image_attachment: :blob).all
   end

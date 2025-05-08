@@ -4,6 +4,7 @@ class Customer::ProductsController < ApplicationController
   def index
     @products = Product.includes(image_attachment: :blob).all
   end
+
   def show
     @product = Product.includes(image_attachment: :blob).find(params[:id])
     @related_products = Product.includes(image_attachment: :blob)
@@ -13,6 +14,7 @@ class Customer::ProductsController < ApplicationController
   end
 
   private
+
   def set_current_cart
     @current_cart = Cart.find_or_create_by(session_id: session.id.to_s)
   end
