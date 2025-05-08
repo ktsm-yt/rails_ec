@@ -21,7 +21,7 @@
         <%= link_to "商品作成", new_admin_product_path, class: "btn btn-primary" %>
       <% else %>
         <div class="d-flex">
-          <%= link_to customer_cart_path, class:"btn btn-outline-dark" do %>
+          <%= link_to cart_path, class:"btn btn-outline-dark" do %>
             <i class="bi-cart-fill me-1"></i>
             Cart
             <span class="badge bg-dark text-white ms-1 rounded-pill"><%= @cart_items.sum(:quantity) %></span> <%# カートの点数は動的に変更 %>

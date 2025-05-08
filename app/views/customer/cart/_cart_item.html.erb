@@ -2,13 +2,13 @@
   <div>
     <h5 class="my-0 "><%= item.product.name %></h5>
     <div class="d-flex">
-      <%= form_with url: update_item_customer_cart_path(item), method: :patch, data: { turbo: false },class: 'd-flex' do %>
+      <%= form_with url: update_item_cart_path(item), method: :patch, data: { turbo: false },class: 'd-flex' do %>
         <%= number_field_tag :quantity, item.quantity, min: 1, max: 99, class: "form-control form-control-sm" %>
         <%= button_tag type: 'submit', class: 'btn btn-sm btn-outline-secondary ms-1' do %>
           <i class="bi bi-arrow-clockwise"></i>
         <% end %>
       <% end %>
-      <%= link_to remove_item_customer_cart_path(item), 
+      <%= link_to remove_item_cart_path(item), 
       data: {turbo_method: :delete, turbo_confirm: '本当に削除しますか？'}, 
       class: 'btn btn-sm btn-outline-secondary ms-2' do %>
         <i class="bi bi-trash"></i>

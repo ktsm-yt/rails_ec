@@ -26,7 +26,7 @@
           <% end %>
         </div>
         <p class="lead"><%= @product.description %></p>
-        <%= form_with url: add_item_customer_cart_path(product_id: @product.id), method: :post, local: true do |form| %>
+        <%= form_with url: add_item_cart_path(product_id: @product.id), method: :post, local: true do |form| %>
           <div class="d-flex">
             <%= number_field_tag :quantity, 1, min: 1, max: 99,
                             class: "form-control text-center me-3",

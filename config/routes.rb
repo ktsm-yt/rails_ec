@@ -5,21 +5,19 @@ Rails.application.routes.draw do
 
   namespace :admin do
     root to: 'products#index'
-    resources :products, only: %i[index show new create edit update destroy]
+    resources :products
   end
 
   scope module: :customer do
     resources :products, only: %i[index show]
-    resources :cart, only: %i[index] do
+
+    resource :cart, only: [:show, :destroy] do
       collection do
-        delete :destroy
+        post :add_item
+        patch 'update_item/:id', action: :update_item
+        delete 'remove_item/:id', action: :remove_item
       end
     end
-    get '/cart', to: 'cart#index', as: 'customer_cart'
-    post '/cart/add_item', to: 'cart#add_item', as: 'add_item_customer_cart'
-    patch '/cart/update_item/:id', to: 'cart#update_item', as: 'update_item_customer_cart'
-    delete '/cart/remove_item/:id', to: 'cart#remove_item', as: 'remove_item_customer_cart'
-    delete '/cart', to: 'cart#destroy', as: 'clear_cart'
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 end
