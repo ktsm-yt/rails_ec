@@ -15,18 +15,19 @@ class Cart < ApplicationRecord
     end
   end
 
-  def remove_product(product)
-    current_item = find_item_by_product(product)
+  # # 使ってないメソッド
+  # def remove_product(product, quantity = 1)
+  #   current_item = find_item_by_product(product)
 
-    return unless current_item # アイテムが存在するか
+  #   return unless current_item # アイテムが存在するか
 
-    if current_item.quantity > 1
-      current_item.quantity -= quantity
-      current_item.save # 数量が2以上の場合は1減らす
-    else
-      current_item.destroy # 数量が1の場合はアイテムを削除
-    end
-  end
+  #   if current_item.quantity > 1
+  #     current_item.quantity -= quantity
+  #     current_item.save # 数量が2以上の場合は1減らす
+  #   else
+  #     current_item.destroy # 数量が1の場合はアイテムを削除
+  #   end
+  # end
 
   def total_price
     cart_items.sum { |item| item.product.price * item.quantity }
