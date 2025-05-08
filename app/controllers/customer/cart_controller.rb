@@ -1,7 +1,9 @@
 class Customer::CartController < ApplicationController
+  before_action :set_current_cart
   before_action :set_cart_item, only: %i[update_item remove_item]
+
   def index
-    @cart_items = @current_cart.cart_items.includes(:product).order(created_at: :asc) # N+1
+    @cart_items = @current_cart.cart_items.includes(:product).order(created_at: :asc)
   end
 
   # current_cartは現在のユーザーセッションに関連付けられているカートobj
@@ -16,7 +18,11 @@ class Customer::CartController < ApplicationController
 
   # カートの数値の直接更新
   def update_item
-    cart_item = @current_cart.cart_items.find(params[:id])
+    begin
+      cart_item = @current_cart.cart_items.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      redirect_to customer_cart_path, alert: '指定された商品はカートに存在しません'
+    end
     quantity = params[:quantity].to_i
 
     if quantity.positive?
@@ -51,5 +57,9 @@ class Customer::CartController < ApplicationController
 
   def set_cart_item
     @cart_item = @current_cart.cart_items.find(params[:id])
+  end
+
+  def set_current_cart
+    @current_cart = Cart.find_or_create_by(session_id: session.id.to_s)
   end
 end
