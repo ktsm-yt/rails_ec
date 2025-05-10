@@ -3,7 +3,7 @@ class Customer::CartController < ApplicationController
   before_action :set_cart_item, only: %i[update_item remove_item]
   rescue_from ActiveRecord::RecordNotFound, with: :handle_record_not_found
 
-  def index
+  def show
     @cart_items = @current_cart.cart_items.includes(:product).order(created_at: :asc)
   end
 

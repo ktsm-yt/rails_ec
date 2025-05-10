@@ -33,7 +33,7 @@
               <%# </li> %>
             <li class="list-group-item d-flex justify-content-between">
               <%# <span>Total (USD)</span> %>
-              <%= link_to clear_cart_path, 
+              <%= link_to cart_path, 
                 data: {turbo_method: :delete, turbo_confirm: '本当にカート内を全て削除しますか？'}, 
                 class: 'btn btn-sm btn-danger' do %>
                   <i class="bi bi-trash"></i> カートを空にする
