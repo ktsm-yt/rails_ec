@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_05_11_005651) do
+ActiveRecord::Schema[7.0].define(version: 2025_05_11_010746) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -59,6 +59,24 @@ ActiveRecord::Schema[7.0].define(version: 2025_05_11_005651) do
     t.index ["session_id"], name: "index_carts_on_session_id", unique: true
   end
 
+  create_table "checkouts", force: :cascade do |t|
+    t.string "first_name", null: false
+    t.string "last_name", null: false
+    t.string "username", null: false
+    t.string "email", null: false
+    t.string "address1", null: false
+    t.string "address2"
+    t.bigint "country_id", null: false
+    t.bigint "state_id", null: false
+    t.string "zip", null: false
+    t.boolean "shipping_same_as_billing"
+    t.boolean "save_info_for_next_time"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["country_id"], name: "index_checkouts_on_country_id"
+    t.index ["state_id"], name: "index_checkouts_on_state_id"
+  end
+
   create_table "countries", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
@@ -90,4 +108,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_05_11_005651) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "cart_items", "carts"
   add_foreign_key "cart_items", "products"
+  add_foreign_key "checkouts", "countries"
+  add_foreign_key "checkouts", "states"
 end
