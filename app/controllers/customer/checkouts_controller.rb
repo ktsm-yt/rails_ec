@@ -1,10 +1,11 @@
 class Customer::CheckoutsController < ApplicationController
   before_action :set_current_cart, only: :create
   
-  def new
+  # continue to checkout
+  def create
   end
 
-  def create
+  def thanks_message
   end
 
   private

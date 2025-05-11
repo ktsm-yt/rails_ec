@@ -92,7 +92,7 @@
                     <%= f.select :state, options_for_select(['Choose','California' ]), {}, class: "form-select" %>
                   </div>
                   <div class="col-md-3">
-                    <%= f.label :zip, "Zip", class: "form-label" %>
+                    <%= f.label :zip, "Zip", class: "form-label", required: true %>
                     <%= f.text_field :zip, class: "form-control" %>
                   </div>
               </div>
@@ -151,7 +151,7 @@
               </div>
               
               <hr class="my-4">
-              <button class="w-100 btn btn-primary btn-lg" type="submit">Continue to checkout</button>
+              <%= button_tag "購入する", type: 'submit', class:"w-100 btn btn-primary btn-lg" %>
             <% end %>
           </div>
         </div>

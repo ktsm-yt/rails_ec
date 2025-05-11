@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_05_11_010746) do
+ActiveRecord::Schema[7.0].define(version: 2025_05_11_104912) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -84,6 +84,17 @@ ActiveRecord::Schema[7.0].define(version: 2025_05_11_010746) do
     t.index ["name"], name: "index_countries_on_name", unique: true
   end
 
+  create_table "credit_cards", force: :cascade do |t|
+    t.string "name_on_card", null: false
+    t.string "card_number", null: false
+    t.integer "expiration_month", null: false
+    t.integer "expiration_year", null: false
+    t.bigint "checkout_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["checkout_id"], name: "index_credit_cards_on_checkout_id"
+  end
+
   create_table "products", force: :cascade do |t|
     t.string "name", null: false
     t.text "description", null: false
@@ -110,4 +121,5 @@ ActiveRecord::Schema[7.0].define(version: 2025_05_11_010746) do
   add_foreign_key "cart_items", "products"
   add_foreign_key "checkouts", "countries"
   add_foreign_key "checkouts", "states"
+  add_foreign_key "credit_cards", "checkouts"
 end
