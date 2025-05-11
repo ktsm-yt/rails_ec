@@ -82,37 +82,31 @@
                   <%= f.label :address2, "Address 2 (Optional)",class: "form-label" %>
                   <%= f.text_field :address2, class: "form-control", placeholder: "Apartment or suite" %>
                 </div>
-              </div>
                 <div class="col-md-5">
                   <%= f.label :country, "Country", class: "form-label" %>
-                  <%= f.select class: "form-select" %>
-                    <option value="">Choose...</option>
-                    <option>United States</option>
-                  <% end %>
+                  <%= f.select :country, options_for_select(['Choose', 'United States']), {}, class: "form-select" %>
                 </div>
 
                   <div class="col-md-4">
                     <%= f.label :state, "State", class: "form-label" %>
-                    <%= f.select class: "form-select" %>
-                      <option value="">Choose...</option>
-                      <option>California</option>
-                    <% end %>
+                    <%= f.select :state, options_for_select(['Choose','California' ]), {}, class: "form-select" %>
                   </div>
                   <div class="col-md-3">
                     <%= f.label :zip, "Zip", class: "form-label" %>
                     <%= f.text_field :zip, class: "form-control" %>
                   </div>
+              </div>
 
 
               <hr class="my-4">
 
                 <div class="form-check">
-                  <%= f.checkbox class: "form-check-input" %>
+                  <%= f.check_box :same_address, class: "form-check-input" %>
                   <%= f.label :same_address, "Shipping address is the same as my billing address", class: "form-check-label" %>
                 </div>
                 <div class="form-check">
+                  <%= f.check_box :save_info, class:"form-check-input" %>
                   <%= f.label :save_info, "Save this information for next time", class: "form-check-label" %>
-                  <%= f.checkbox class:"form-check-input" %>
                 </div>
 
               <hr class="my-4">
