@@ -1,4 +1,4 @@
-class Customer::CheckoutController < ApplicationController
+class Customer::CheckoutsController < ApplicationController
   before_action :set_current_cart, only: :create
   
   # continue to checkout
@@ -16,7 +16,9 @@ class Customer::CheckoutController < ApplicationController
       return
     else
       @cart_items = @current_cart.cart_items
-      flash.now[:alert] = '入力内容に不備があります'
+      flash[:alert] = '入力内容に不備があります'
+      # CreditCardオブジェクトが存在しない場合にビルド
+      @checkout.build_credit_card unless @checkout.credit_card
       render 'customer/cart/show'
     end
   end
@@ -24,7 +26,7 @@ class Customer::CheckoutController < ApplicationController
   private
 
   def set_current_cart
-    @current_cart = Cart.find_or_create_by(session_id: session_id.to_s)
+    @current_cart = Cart.find_or_create_by(session_id: session.id.to_s)
   end
 
   def checkout_params
@@ -39,7 +41,6 @@ class Customer::CheckoutController < ApplicationController
                             :zip,
                             :shipping_same_as_billing,
                             :save_info_for_next_time
-                            :cvv #こちらで管理する
                             )
   end
 end

@@ -133,8 +133,12 @@
                     </div>
                     <%# cvvはデータベースに保存しないのでcheckoutフォームで処理 %>
                     <div class="col-md-3"> 
-                      <label for="cc-expiration" class="form-label">Expiration</label>
-                      <input type="text" class="form-control" id="cc-expiration" placeholder="" required>
+                      <%= ff.label "Expiration_Month", class: "form-label" %>
+                      <%= ff.number_field :expiration_month, class: "form-control", placeholder:"25", required: true %>
+                    </div>
+                    <div class="col-md-3"> 
+                      <%= ff.label "Expiration_Year", class: "form-label" %>
+                      <%= ff.number_field :expiration_year, class: "form-control", placeholder:"05", required: true %>
                     </div>
                     <div class="col-md-3">  
                       <%= f.label :cvv, 'CVV', class: 'form-label' %>

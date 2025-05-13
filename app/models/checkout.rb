@@ -1,5 +1,5 @@
 class Checkout < ApplicationRecord
-  belongs_to :countries
+  belongs_to :country
   belongs_to :state
   has_one :credit_card, dependent: :destroy
 

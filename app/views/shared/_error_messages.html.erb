@@ -1,0 +1,11 @@
+<%# app/views/shared/_error_messages.html.erb %>
+<% if model.errors.any? %>
+  <div id="error_explanation" class="alert alert-danger">
+    <h2><%= pluralize(model.errors.count, "error") %> prevented this from being saved:</h2>
+    <ul>
+      <% model.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
