@@ -5,8 +5,16 @@ class Customer::CartController < ApplicationController
 
   def show
     @cart_items = @current_cart.cart_items.includes(:product).order(created_at: :asc)
-    @checkout = Checkout.new
-    @checkout.build_credit_card # has_oneのときの書き方。普通は.build
+    
+    # もしフォームにデータがあれば読み込む
+    if session[:checkout_params]
+      @checkout = Checkout.new(session[:checkout_params])
+      # 一度利用したsessionを無駄に保持するとエラーの温床なのでクリアして更新に備える
+      session.delete(:checkout_params)
+    else
+      @checkout = Checkout.new
+      @checkout.build_credit_card # has_oneのときの書き方。普通は.build
+    end
   end
 
   # current_cartは現在のユーザーセッションに関連付けられているCartのobj

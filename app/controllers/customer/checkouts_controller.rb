@@ -15,11 +15,11 @@ class Customer::CheckoutsController < ApplicationController
       @current_cart.cart_items.destroy_all
       return
     else
-      @cart_items = @current_cart.cart_items
+      # PRGパターン
+      # フォームデータをセッションに保存
+      session[:checkout_params] = checkout_params
       flash[:alert] = '入力内容に不備があります'
-      # CreditCardオブジェクトが存在しない場合にビルド
-      @checkout.build_credit_card unless @checkout.credit_card
-      render 'customer/cart/show'
+      redirect_to cart_path
     end
   end
 
