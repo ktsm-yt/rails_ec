@@ -16,6 +16,7 @@ Rails.application.routes.draw do
       patch 'update_item/:id', action: :update_item, as: :update_item # pathが文字列なのでaction明示
       delete 'remove_item/:id', action: :remove_item, as: :remove_item
     end
+
+    resource :checkout, only: [:create] 
   end
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html 
 end

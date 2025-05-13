@@ -5,6 +5,8 @@ class Customer::CartController < ApplicationController
 
   def show
     @cart_items = @current_cart.cart_items.includes(:product).order(created_at: :asc)
+    @checkout = Checkout.new
+    @checkout.build_credit_card # has_oneのときの書き方。普通は.build
   end
 
   # current_cartは現在のユーザーセッションに関連付けられているCartのobj

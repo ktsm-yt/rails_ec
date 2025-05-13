@@ -3,9 +3,13 @@ class Checkout < ApplicationRecord
   belongs_to :state
   has_one :credit_card, dependent: :destroy
 
+  # todo 一つのbuttonから2つのモデルcreditとcheckoutを取ってこなきゃならない
   # CreditCardの属性をCheckoutフォームからまとめて受け取れるようにする
-  accept_nested_attributes_for :credit_card
+  accepts_nested_attributes_for :credit_card
 
-  # フォームで関連オブジェクトを作成するために必要
+  # フォームで受け取った関連のバリデーションチェック
   validates_associated :credit_card
+  # 自身へのチェック 
+  # validate
+  ## 注文,在庫,支払いetc
 end
