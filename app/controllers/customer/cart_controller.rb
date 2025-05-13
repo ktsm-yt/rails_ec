@@ -7,7 +7,7 @@ class Customer::CartController < ApplicationController
     @cart_items = @current_cart.cart_items.includes(:product).order(created_at: :asc)
 
     @united_states = Country.find_by(name: 'United States')
-    @california = State.find_by(name: 'California', country: @united_states) 
+    @california = State.find_by(name: 'California', country: @united_states)
     # 中身がnilでも必ず配列を作成する
     @countries = [@united_states].compact
     @states = [@california].compact

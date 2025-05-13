@@ -17,6 +17,6 @@ Rails.application.routes.draw do
       delete 'remove_item/:id', action: :remove_item, as: :remove_item
     end
 
-    resource :checkout, only: [:create] 
+    resource :checkout, only: [:create]
   end
 end
