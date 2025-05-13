@@ -6,7 +6,7 @@
       <% if notice %>
         <p class="alert alert-success"><%= notice %></p>
       <% end%>
-      <% if alert %> 
+      <% if alert %>
         <p class="alert alert-danger"><%= alert %></p>
       <% end%>
       <% if @cart_items.empty? %>
@@ -36,7 +36,7 @@
                   <%= link_to cart_path,
                     data: {turbo_method: :delete, turbo_confirm: '本当にカート内を全て削除しますか？'},
                     class: 'btn btn-sm btn-danger' do %>
-                      <i class="bi bi-trash"></i> カートを空にする
+                    <i class="bi bi-trash"></i> カートを空にする
                   <% end %>
                   <strong class="ms-auto text-end">Total(USD) <%= number_to_currency(@current_cart.total_price) %></strong>
                 </div>
@@ -49,107 +49,99 @@
                 </div>
               </form> %>
           </div>
-
-
           <div class="col-md-7 col-lg-8 text-start" >
             <h4 class="mb-3">Billing address</h4>
             <%= form_with model: @checkout, url: checkout_path, local: true, data: { turbo: false }, html: {class: "needs-validation", novalidate: true } do |f|  %>
               <%= render 'shared/error_messages', model: f.object if f.object.errors.any? %>
-              
-                <div class="row g-3">
-                  <div class="col-sm-6">
-                    <%= f.label :first_name, "First name", class: "form-label", required: true %>
-                    <%= f.text_field :first_name, class: "form-control" %>
-                  </div>
-                  <div class="col-sm-6">
-                    <%= f.label :last_name, "Last name", class: "form-label", required: true %>
-                    <%= f.text_field :last_name, class: "form-control" %>
-                  </div>
-                  <div class="col-12">
-                    <%= f.label :username, "username", class: "form-label", required: true %>
-                    <div class="input-group has-validation">
-                      <span class="input-group-text">@</span>
-                      <%= f.text_field :username, class: "form-control", placeholder: "Username" %>
-                    </div>
-                  </div>
-                  <div class="col-12">
-                    <%= f.label :email, "Email (Optional)", class: "form-label", required: true %> 
-                    <%= f.text_field :email, class: "form-control", placeholder: "you@example.com" %>
-                  </div>
-                  <div class="col-12">
-                    <%= f.label :address1, "Address", class: "form-label", required: true %>
-                    <%= f.text_field :address1, class: "form-control", placeholder: "1234 Main St" %>
-                  </div>
-                  <div class="col-12">
-                    <%= f.label :address2, "Address 2 (Optional)",class: "form-label" %>
-                    <%= f.text_field :address2, class: "form-control", placeholder: "Apartment or suite" %>
-                  </div>
-                  <div class="col-md-5">
-                    <%= f.label :country_id, "Country", class: "form-label" %>
-                    <%= f.collection_select :country_id, @countries, :id, :name, { prompt: 'Choose' }, class: "form-select" %>
-                  </div>
-                  <div class="col-md-4">
-                    <%= f.label :state_id, "State", class: "form-label" %>
-                    <%= f.collection_select :state_id, @states, :id, :name, { prompt: 'Choose' }, class: "form-select" %>
-                  </div>
-                  <div class="col-md-3">
-                    <%= f.label :zip, "Zip", class: "form-label", required: true %>
-                    <%= f.text_field :zip, class: "form-control" %>
+              <div class="row g-3">
+                <div class="col-sm-6">
+                  <%= f.label :first_name, "First name", class: "form-label", required: true %>
+                  <%= f.text_field :first_name, class: "form-control" %>
+                </div>
+                <div class="col-sm-6">
+                  <%= f.label :last_name, "Last name", class: "form-label", required: true %>
+                  <%= f.text_field :last_name, class: "form-control" %>
+                </div>
+                <div class="col-12">
+                  <%= f.label :username, "username", class: "form-label", required: true %>
+                  <div class="input-group has-validation">
+                    <span class="input-group-text">@</span>
+                    <%= f.text_field :username, class: "form-control", placeholder: "Username" %>
                   </div>
                 </div>
-
-
-                <hr class="my-4">
-
-                  <div class="form-check">
-                    <%= f.check_box :shipping_same_as_billing, class: "form-check-input" %>
-                    <%= f.label :shipping_same_as_billing, "Shipping address is the same as my billing address", class: "form-check-label" %>
-                  </div>
-                  <div class="form-check">
-                    <%= f.check_box :save_info_for_next_time, class:"form-check-input" %>
-                    <%= f.label :save_info_for_next_time, "Save this information for next time", class: "form-check-label" %>
-                  </div>
-
-                <hr class="my-4">
+                <div class="col-12">
+                  <%= f.label :email, "Email (Optional)", class: "form-label", required: true %>
+                  <%= f.text_field :email, class: "form-control", placeholder: "you@example.com" %>
+                </div>
+                <div class="col-12">
+                  <%= f.label :address1, "Address", class: "form-label", required: true %>
+                  <%= f.text_field :address1, class: "form-control", placeholder: "1234 Main St" %>
+                </div>
+                <div class="col-12">
+                  <%= f.label :address2, "Address 2 (Optional)",class: "form-label" %>
+                  <%= f.text_field :address2, class: "form-control", placeholder: "Apartment or suite" %>
+                </div>
+                <div class="col-md-5">
+                  <%= f.label :country_id, "Country", class: "form-label" %>
+                  <%= f.collection_select :country_id, @countries, :id, :name, { prompt: 'Choose' }, class: "form-select" %>
+                </div>
+                <div class="col-md-4">
+                  <%= f.label :state_id, "State", class: "form-label" %>
+                  <%= f.collection_select :state_id, @states, :id, :name, { prompt: 'Choose' }, class: "form-select" %>
+                </div>
+                <div class="col-md-3">
+                  <%= f.label :zip, "Zip", class: "form-label", required: true %>
+                  <%= f.text_field :zip, class: "form-control" %>
+                </div>
+              </div>
+              <hr class="my-4">
+              <div class="form-check">
+                <%= f.check_box :shipping_same_as_billing, class: "form-check-input" %>
+                <%= f.label :shipping_same_as_billing, "Shipping address is the same as my billing address", class: "form-check-label" %>
+              </div>
+              <div class="form-check">
+                <%= f.check_box :save_info_for_next_time, class:"form-check-input" %>
+                <%= f.label :save_info_for_next_time, "Save this information for next time", class: "form-check-label" %>
+              </div>
+              <hr class="my-4">
               <h4 class="mb-3">Payment</h4>
               <%= f.fields_for :credit_card do |ff| %>
                 <%= render "shard/error_messages", model: ff.object if ff.object.errors.any? %>
-
-                  <div class="my-3">
-                    <div class="form-check">
-                      <input id="credit" name="paymentMethod" type="radio" class="form-check-input" checked required>
-                      <%= ff.label "Credit Card", class:"form-check-label", for: "credit" %>
-                    </div>
+                <div class="my-3">
+                  <div class="form-check">
+                    <input id="credit" name="paymentMethod" type="radio" class="form-check-input" checked required>
+                    <%= ff.label "Credit Card", class:"form-check-label", for: "credit" %>
                   </div>
-                  <div class="row gy-3">
-                    <div class="col-md-6">
-                      <%= ff.label :name_on_card, 'Name on card', class: 'form-label' %>
-                      <%= ff.text_field :name_on_card, class: 'form-control', placeholder: 'Full name as displayed on card', required: true %>
-                    </div>
-                    <div class="col-md-6">
-                      <%= ff.label :card_number, 'Credit card number', class: 'form-label' %>
-                      <%= ff.text_field :card_number, class: 'form-control', required: true %>
-                    </div>
-                    <div class="col-md-4">
-                      <%= ff.label "Expiration", class: "form-label" %>
-                      <div class="row">
-                        <div class="col-6">
-                          <%= ff.text_field :expiration_month, class: "form-control", placeholder:"MM", required: true, pattern: "[0-9]*", inputmode: "numeric" %>
-                        </div>
-                        <div class="col-6">
-                          <%= ff.text_field :expiration_year, class: "form-control", placeholder:"YYYY", required: true, pattern: "[0-9]*", inputmode: "numeric" %>
-                        </div>
+                </div>
+                <div class="row gy-3">
+                  <div class="col-md-6">
+                    <%= ff.label :name_on_card, 'Name on card', class: 'form-label' %>
+                    <%= ff.text_field :name_on_card, class: 'form-control', placeholder: 'Full name as displayed on card', required: true %>
+                  </div>
+                  <div class="col-md-6">
+                    <%= ff.label :card_number, 'Credit card number', class: 'form-label' %>
+                    <%= ff.text_field :card_number, class: 'form-control', required: true %>
+                  </div>
+                  <div class="col-md-4">
+                    <%= ff.label "Expiration", class: "form-label" %>
+                    <div class="row">
+                      <div class="col-6">
+                        <%= ff.text_field :expiration_month, class: "form-control", placeholder:"MM", required: true, pattern: "[0-9]*", inputmode: "numeric" %>
+                      </div>
+                      <div class="col-6">
+                        <%= ff.text_field :expiration_year, class: "form-control", placeholder:"YYYY", required: true, pattern: "[0-9]*", inputmode: "numeric" %>
                       </div>
                     </div>
-                    <%# cvvはデータベースに保存しないのでcheckoutフォームで処理 %>
-                    <div class="col-md-3">  
-                      <%= f.label :cvv, 'CVV', class: 'form-label' %>
-                      <%= f.text_field :cvv, class: 'form-control', required: true %>
-                    </div>
                   </div>
+                  <%# cvvはデータベースに保存しないのでcheckoutフォームで処理 %>
+                  <div class="col-md-3">
+                    <%= f.label :cvv, 'CVV', class: 'form-label' %>
+                    <%= f.text_field :cvv, class: 'form-control', required: true %>
+                  </div>
+                </div>
               <% end %>
               <hr class="my-4">
-            <%= button_tag "購入する", type: 'submit', class:"w-100 btn btn-primary btn-lg" %>
+              <%= button_tag "購入する", type: 'submit', class:"w-100 btn btn-primary btn-lg" %>
             <% end %>
           </div>
         </div>
