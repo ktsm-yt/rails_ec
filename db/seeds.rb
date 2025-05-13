@@ -60,5 +60,16 @@ products.each do |product_attrs|
     # raise "Failed to save product: #{product.name}" # 例: エラーで停止する場合
   end
 end
-
 puts "Finished creating #{Product.count} products."
+
+# Country and States Seeds
+puts "Creating countries and states..."
+
+country_usa = Country.find_or_create_by!(name: 'United States') do |country|
+end
+
+country+usa.states.find_or_created_by!(name: 'California')
+
+puts "Finished creating countries and states."
+puts "Created #{Country.count} countries."
+puts "Created #{State.count} states."
