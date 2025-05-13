@@ -40,7 +40,13 @@ class Customer::CheckoutsController < ApplicationController
                             :state_id,
                             :zip,
                             :shipping_same_as_billing,
-                            :save_info_for_next_time
+                            :save_info_for_next_time,
+                            credit_card_attributes: [
+                              :name_on_card,
+                              :card_number,
+                              :expiration_month,
+                              :expiration_year
+                            ]
                             )
   end
 end

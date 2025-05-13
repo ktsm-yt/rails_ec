@@ -15,6 +15,9 @@ class Customer::CartController < ApplicationController
       @checkout = Checkout.new
       @checkout.build_credit_card # has_oneのときの書き方。普通は.build
     end
+    # なぜかリダイレクト後にpayment以下が消えちゃう
+    # CreditCardオブジェクトが存在しない場合にビルド
+    @checkout.build_credit_card unless @checkout.credit_card
   end
 
   # current_cartは現在のユーザーセッションに関連付けられているCartのobj
