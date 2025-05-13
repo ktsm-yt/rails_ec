@@ -86,17 +86,16 @@
                   </div>
                   <div class="col-md-5">
                     <%= f.label :country_id, "Country", class: "form-label" %>
-                    <%= f.select :country_id, options_for_select(['Choose', 'United States']), {}, class: "form-select" %>
+                    <%= f.collection_select :country_id, @countries, :id, :name, { prompt: 'Choose' }, class: "form-select" %>
                   </div>
-
-                    <div class="col-md-4">
-                      <%= f.label :state_id, "State", class: "form-label" %>
-                      <%= f.select :state_id, options_for_select(['Choose','California' ]), {}, class: "form-select" %>
-                    </div>
-                    <div class="col-md-3">
-                      <%= f.label :zip, "Zip", class: "form-label", required: true %>
-                      <%= f.text_field :zip, class: "form-control" %>
-                    </div>
+                  <div class="col-md-4">
+                    <%= f.label :state_id, "State", class: "form-label" %>
+                    <%= f.collection_select :state_id, @states, :id, :name, { prompt: 'Choose' }, class: "form-select" %>
+                  </div>
+                  <div class="col-md-3">
+                    <%= f.label :zip, "Zip", class: "form-label", required: true %>
+                    <%= f.text_field :zip, class: "form-control" %>
+                  </div>
                 </div>
 
 
@@ -119,7 +118,7 @@
                   <div class="my-3">
                     <div class="form-check">
                       <input id="credit" name="paymentMethod" type="radio" class="form-check-input" checked required>
-                      <%= ff.label "Credit Card",class:"form-check-label" %>
+                      <%= ff.label "Credit Card", class:"form-check-label", for: "credit" %>
                     </div>
                   </div>
                   <div class="row gy-3">

@@ -1,6 +1,7 @@
 class Checkout < ApplicationRecord
   belongs_to :country
   belongs_to :state
+  belongs_to :cart
   has_one :credit_card, dependent: :destroy
 
   # todo 一つのbuttonから2つのモデルcreditとcheckoutを取ってこなきゃならない

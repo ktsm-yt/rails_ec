@@ -65,10 +65,9 @@ puts "Finished creating #{Product.count} products."
 # Country and States Seeds
 puts "Creating countries and states..."
 
-country_usa = Country.find_or_create_by!(name: 'United States') do |country|
-end
+country_usa = Country.find_or_create_by!(name: 'United States')
 
-country+usa.states.find_or_created_by!(name: 'California')
+country_usa.states.find_or_create_by!(name: 'California')
 
 puts "Finished creating countries and states."
 puts "Created #{Country.count} countries."
