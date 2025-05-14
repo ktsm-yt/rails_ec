@@ -3,12 +3,9 @@
     <div class="py-5 text-center">
       <h1 class="h2">ショッピングカート</h1>
       <p class="lead"></p>
-      <% if notice %>
-        <p class="alert alert-success"><%= notice %></p>
-      <% end%>
-      <% if alert %>
-        <p class="alert alert-danger"><%= alert %></p>
-      <% end%>
+
+      <%= render 'shared/flash_messages' %>
+
       <% if @cart_items.empty? %>
         <p>カートに商品がありません。</p>
         <%= link_to '商品一覧に戻る', products_path, class: 'btn btn-primary' %>

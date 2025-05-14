@@ -1,8 +1,5 @@
 <h2 class="text-center mt-5"> 商品管理画面 </h2>
-<% if notice %>
-  <p class="alert alert-success"><%= notice %></p>
-<% end%>
-<% if alert %>
+ <%= render 'shared/flash_messages' %>
   <p class="alert alert-danger"><%= alert %></p>
 <% end%>
 <section class="py-5">

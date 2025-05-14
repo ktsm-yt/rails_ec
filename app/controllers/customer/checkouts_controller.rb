@@ -14,12 +14,11 @@ class Customer::CheckoutsController < ApplicationController
     if @checkout.save # cvvは保存されない。DBにカラムがないもんね
       redirect_to products_path, notice: '購入ありがとうございます'
       @current_cart.cart_items.destroy_all
-      nil
     else
       # PRGパターン
       # フォームデータをセッションに保存
       session[:checkout_params] = checkout_params
-      flash[:alert] = '入力内容に不備があります'
+      flash[:alert] = @checkout.errors.full_messages.join('<br>')
       redirect_to cart_path
     end
   end
