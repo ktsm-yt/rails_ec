@@ -8,8 +8,7 @@ class Customer::CheckoutsController < ApplicationController
       return
     end
 
-    @checkout = Checkout.new(checkout_params)
-    @checkout.cart = @current_cart
+    @checkout = @current_cart.build_checkout(checkout_params)
 
     if @checkout.save # cvvは保存されない。DBにカラムがないもんね
       redirect_to products_path, notice: '購入ありがとうございます'
