@@ -1,14 +1,6 @@
-<% flash.each do |key, message| %>
-  <% alert_class = case key.to_sym
-                      when :notice then 'alert-success'
-                      when :alert, :error then 'alert-danger'
-                      when :warning then 'alert-warning'
-                      when :info then 'alert-info'
-                      else 'alert-secondary'
-                    end
-  %>
+<% flash.each do |key, message|%>
   <% if message.present? %>
-    <div class="alert <%= alert_class %> alert-dismissible fade show" role="alert">
+    <div class="alert <%= flash_alert_class(key) %> alert-dismissible fade show" role="alert">
       <%== message %>
     </div>
   <% end %>
