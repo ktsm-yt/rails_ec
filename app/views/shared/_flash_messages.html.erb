@@ -1,7 +1,7 @@
-<% flash.each do |key, message|%>
-  <% if message.present? %>
-    <div class="alert <%= flash_alert_class(key) %> alert-dismissible fade show" role="alert">
-      <%== message %>
+<% flash.each do |key, msg|%>
+  <% if msg.present? %>
+    <div class="alert <%= flash_alert_class(key) %> alert-dismissible fade show text-center" role="alert">
+      <%== msg %>
     </div>
   <% end %>
 <% end %>
