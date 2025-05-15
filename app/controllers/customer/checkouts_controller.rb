@@ -12,7 +12,7 @@ class Customer::CheckoutsController < ApplicationController
 
     if @checkout.save
 
-      PurchaseMailer.purchase_confirmation_email(@checkout).deliver_later
+      OrderMailer.order_confirmation_email(@checkout).deliver_later
 
       redirect_to products_path, notice: '購入ありがとうございます'
       @current_cart.cart_items.destroy_all
