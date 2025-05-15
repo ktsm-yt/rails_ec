@@ -74,6 +74,7 @@ class Customer::CartController < ApplicationController
   def set_cart_item
     @cart_item = @current_cart.cart_items.find(params[:id])
   end
+
   # Product.find または CartItem.find で ActiveRecord::RecordNotFound が発生した場合
   def handle_record_not_found
     redirect_to cart_path, alert: '指定されたアイテムは見つかりませんでした'
