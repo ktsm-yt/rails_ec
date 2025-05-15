@@ -1,0 +1,19 @@
+<h1>ご購入ありがとうございます<h1>
+
+<p><%= @checkout.first_name %><%= @checkout.last_name%>様</p>
+
+<p>この度は,当店をご利用いただき誠にありがとうございました。</p>
+<p>以下の内容でご注文を承りました</p>
+
+<h2>ご注文内容</h2>
+<ul>
+  <%= @cart_items.each do |item| %>
+  <li>
+    <%= item.product.name %> x <%= item.quantity %>個 - <%= number_to_currency(item.quantity * item.price, unit: "$") %>
+  </li>
+  <% end %>
+</ul>
+
+<p>合計金額: <%= number_to_currency(@checkout.cart.total_price, unit: "$")%></p>
+
+<p>またのご利用をお待ちしております</p>

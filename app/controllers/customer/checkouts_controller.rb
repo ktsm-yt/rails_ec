@@ -10,7 +10,10 @@ class Customer::CheckoutsController < ApplicationController
 
     @checkout = @current_cart.build_checkout(checkout_params)
 
-    if @checkout.save # cvvは保存されない。DBにカラムがないもんね
+    if @checkout.save
+      
+      PurchaseMailer.purchase_confirmation_email(@checkout).deliver_later
+
       redirect_to products_path, notice: '購入ありがとうございます'
       @current_cart.cart_items.destroy_all
     else
