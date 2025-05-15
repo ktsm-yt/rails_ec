@@ -1,5 +1,5 @@
-FROM node:14.17.6 as node
-FROM ruby:3.2.1
+FROM node:18 as node
+FROM ruby:3.3.4
 COPY --from=node /opt/yarn-* /opt/yarn
 COPY --from=node /usr/local/bin/node /usr/local/bin/
 COPY --from=node /usr/local/lib/node_modules/ /usr/local/lib/node_modules/
@@ -13,6 +13,12 @@ RUN apt-get update -qq && \
   libpq-dev \
   libvips-dev \
   postgresql-client \
+  libc6-dev \
+  zlib1g-dev \
+  libssl-dev \
+  libreadline-dev \
+  libyaml-dev \
+  libffi-dev \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
@@ -22,7 +28,10 @@ WORKDIR /myapp
 COPY Gemfile /myapp/Gemfile
 COPY Gemfile.lock /myapp/Gemfile.lock
 
-RUN bundle install
+RUN gem update --system && \
+    gem install bundler && \
+    bundle config set force_ruby_platform true && \
+    bundle install
 
 COPY package.json yarn.lock ./
 RUN yarn install
