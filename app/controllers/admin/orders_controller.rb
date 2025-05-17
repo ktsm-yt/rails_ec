@@ -9,4 +9,3 @@ class Admin::OrdersController < ApplicationController
   end
   # レコード更新の必要がなければストロングパラメータは不要
 end
-
