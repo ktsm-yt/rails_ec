@@ -11,11 +11,44 @@ class Customer::CheckoutsController < ApplicationController
     @checkout = @current_cart.build_checkout(checkout_params)
 
     if @checkout.save
+      begin
+        ActiveRecord::Base.transaction do
+          # Orderの作成 checkoutからデータ取得
+          @order = Order.create!(
+            customer_name: "#{@checkout.first_name} #{@checkout.last_name}",
+            customer_email: @checkout.email,
+            total_price: 0
+            )
+          total_price = 0
+          # CartItemからOrderItemを作成し、購入時点の情報を保存
+          @current_cart.cart_items.includes(:product).each do |cart_item| # Product情報もまとめて取得
+            product = cart_item.product # 元の商品情報
+            item_price = product.price * cart_item.quantity
+            total_price += item_price
 
-      OrderMailer.order_confirmation_email(@checkout).deliver_later
+            @order.order_items.create!(
+              product: product, # Productへの参照 (optional: true)
+              name: product.name, # 購入時点の商品名
+              price: product.price, # 購入時点の価格
+              quantity: cart_item.quantity
+            )
+          end
 
-      redirect_to products_path, notice: '購入ありがとうございます'
-      @current_cart.cart_items.destroy_all
+          # Orderの合計金額を更新
+          @order.update!(total_price: total_price)
+
+          @current_cart.cart_items.destroy_all
+          
+          OrderMailer.order_confirmation_email(@order).deliver_later
+          redirect_to products_path, notice: '購入ありがとうございます'
+        end
+      rescue => e
+         # ログに出力してデバッグしやすくする
+         Rails.logger.error "Order creation failed: #{e.message}"
+         Rails.logger.error e.backtrace.join("\n")
+
+         flash.now[:alert] = "注文処理中にエラーが発生しました。もう一度お試しください。"
+      end
     else
       # PRGパターン
       # フォームデータをセッションに保存

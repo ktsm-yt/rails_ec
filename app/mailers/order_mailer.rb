@@ -1,8 +1,8 @@
 class OrderMailer < ApplicationMailer
-  def order_confirmation_email(checkout)
-    @checkout = checkout
-    @cart_items = @checkout.cart.cart_items
+  def order_confirmation_email(order)
+    @order = order
+    @cart_items = @order.order_items
 
-    mail(to: @checkout.email, subject: '購入明細')
+    mail(to: @order.customer_email, subject: '注文内容のご確認')
   end
 end
