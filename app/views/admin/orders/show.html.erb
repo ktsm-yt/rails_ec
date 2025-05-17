@@ -1,0 +1,42 @@
+<%# app/views/admin/orders/show.html.erb %>
+<h1>購入明細詳細 #<%= @order.id %></h1>
+
+<p><strong>購入者:</strong> <%= @order.customer_name %></p>
+<p><strong>メールアドレス:</strong> <%= @order.customer_email %></p>
+<p><strong>注文日時:</strong> <%= l(@order.created_at, format: :long) %></p>
+
+<h2>ご注文商品</h2>
+<table>
+  <thead>
+    <tr>
+      <th>商品名 (購入時点)</th>
+      <th>単価 (購入時点)</th>
+      <th>数量</th>
+      <th>小計</th>
+      <th>元の商品 (参照)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @order.order_items.each do |item| %>
+      <tr>
+        <td><%= item.name %></td>
+        <td><%= number_to_currency(item.price, unit: "¥") %></td>
+        <td><%= item.quantity %></td>
+        <td><%= number_to_currency(item.price * item.quantity, unit: "¥") %></td>
+        <td>
+          <%# productへの関連がoptionalなのでnilチェックが必要 %>
+          <% if item.product %>
+            <%# 元の商品へのリンク（管理者側の商品詳細ページを想定） %>
+            <%= link_to item.product.name, admin_product_path(item.product) %>
+          <% else %>
+            <em>(商品削除済み)</em>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<h3>合計金額: <%= number_to_currency(@order.total_price, unit: "¥") %></h3>
+
+<%= link_to '一覧に戻る', admin_orders_path %>
