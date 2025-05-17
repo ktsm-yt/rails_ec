@@ -77,6 +77,7 @@ class Customer::CheckoutsController < ApplicationController
         card_number
         expiration_month
         expiration_year
+        cvv
       ]
     )
   end

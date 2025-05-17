@@ -111,7 +111,8 @@ class Customer::CartController < ApplicationController
         name_on_card: params[:name_on_card],
         card_number: params[:card_number],
         expiration_month: params[:expiration_month],
-        expiration_year: params[:expiration_year]
+        expiration_year: params[:expiration_year],
+        cvv: params[:cvv]
       }.compact
     end
     
