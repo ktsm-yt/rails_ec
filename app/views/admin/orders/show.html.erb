@@ -20,7 +20,7 @@
     <% @order.order_items.each do |item| %>
       <tr>
         <td><%= item.name %></td>
-        <td><%= number_to_currency(item.price, unit: "¥") %></td>
+        <td><%= number_to_currency(item.price, unit: "$") %></td>
         <td><%= item.quantity %></td>
         <td><%= number_to_currency(item.price * item.quantity, unit: "¥") %></td>
         <td>
