@@ -18,7 +18,12 @@ services:
     depends_on:
       - db
     tty: true
+  redis:
+    image: redis:latest
+    volumes:
+      - redis-data:/data
 volumes:
   db:
   bundle:
   node_modules:
+  redis-data:
