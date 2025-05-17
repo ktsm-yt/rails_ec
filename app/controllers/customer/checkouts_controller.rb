@@ -3,7 +3,7 @@ class Customer::CheckoutsController < ApplicationController
 
   # continue to checkout
   def create
-    if @current_cart.nil?
+    if @current_cart.nil? || @current_cart.cart_items.empty?
       redirect_to cart_path, alert: 'カートが空か,無効です'
       return
     end
