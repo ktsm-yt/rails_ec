@@ -7,48 +7,9 @@ class Customer::CheckoutsController < ApplicationController
       redirect_to cart_path, alert: 'カートが空か,無効です'
       return
     end
-
     @checkout = @current_cart.build_checkout(checkout_params)
-
     if @checkout.save
-      begin
-        ActiveRecord::Base.transaction do
-          # Orderの作成 checkoutからデータ取得
-          @order = Order.create!(
-            customer_name: "#{@checkout.first_name} #{@checkout.last_name}",
-            customer_email: @checkout.email,
-            total_price: 0
-            )
-          total_price = 0
-          # CartItemからOrderItemを作成し、購入時点の情報を保存
-          @current_cart.cart_items.includes(:product).each do |cart_item| # Product情報もまとめて取得
-            product = cart_item.product # 元の商品情報
-            item_price = product.price * cart_item.quantity
-            total_price += item_price
-
-            @order.order_items.create!(
-              product: product, # Productへの参照 (optional: true)
-              name: product.name, # 購入時点の商品名
-              price: product.price, # 購入時点の価格
-              quantity: cart_item.quantity
-            )
-          end
-
-          # Orderの合計金額を更新
-          @order.update!(total_price: total_price)
-
-          @current_cart.cart_items.destroy_all
-          
-          OrderMailer.order_confirmation_email(@order).deliver_later
-          redirect_to products_path, notice: '購入ありがとうございます'
-        end
-      rescue => e
-         # ログに出力してデバッグしやすくする
-         Rails.logger.error "Order creation failed: #{e.message}"
-         Rails.logger.error e.backtrace.join("\n")
-
-         flash.now[:alert] = "注文処理中にエラーが発生しました。もう一度お試しください。"
-      end
+      process_order_transaction
     else
       # PRGパターン
       # フォームデータをセッションに保存
@@ -80,5 +41,63 @@ class Customer::CheckoutsController < ApplicationController
         cvv
       ]
     )
+  end
+
+  def process_order_transaction
+    ActiveRecord::Base.transaction do
+      create_order_from_checkout
+      create_order_items
+      update_order_total
+      clear_cart
+      send_confirmation_email
+      redirect_to products_path, notice: '購入ありがとうございます'
+    end
+  rescue StandardError => e
+    # ログに出力してデバッグしやすくする
+    log_error(e)
+    flash.now[:alert] = '注文処理中にエラーが発生しました。もう一度お試しください。'
+  end
+
+  # Orderの作成 checkoutからデータ取得
+  def create_order_from_checkout
+    @order = Order.create!(
+      customer_name: "#{@checkout.first_name} #{@checkout.last_name}",
+      customer_email: @checkout.email,
+      total_price: 0
+    )
+  end
+
+  # CartItemからOrderItemを作成し、購入時点の情報を保存
+  def create_order_items
+    @total_price = 0
+    @current_cart.cart_items.includes(:product).find_each do |cart_item| # Product情報もまとめて取得
+      product = cart_item.product # 元の商品情報
+      item_price = product.price * cart_item.quantity
+      @total_price += item_price
+
+      @order.order_items.create!(
+        product: product, # Productへの参照 (optional: true)
+        name: product.name, # 購入時点の商品名
+        price: product.price, # 購入時点の価格
+        quantity: cart_item.quantity
+      )
+    end
+  end
+
+  def update_order_total
+    @order.update!(total_price: @total_price)
+  end
+
+  def clear_cart
+    @current_cart.cart_items.destroy_all
+  end
+
+  def send_order_confirmation_email
+    OrderMailer.order_confirmation_email(@order).deliver_later
+  end
+
+  def log_error(exception)
+    Rails.logger.error "Order creation failed: #{exception.message}"
+    Rails.logger.error e.backtrace.join("\n")
   end
 end
