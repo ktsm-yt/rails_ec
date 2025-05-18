@@ -18,7 +18,6 @@
             <%= text_field_tag :zip, @checkout.zip %>
             <%= text_field_tag :shipping_same_as_billing, @checkout.shipping_same_as_billing %>
             <%= text_field_tag :save_info_for_next_time, @checkout.save_info_for_next_time %>
-            
             <%# クレジットカード情報 %>
             <% if @checkout.credit_card.present? %>
               <%= text_field_tag :card_number, @checkout.credit_card.card_number %>

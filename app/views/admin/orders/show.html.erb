@@ -1,10 +1,8 @@
 <%# app/views/admin/orders/show.html.erb %>
 <h1>購入明細詳細 #<%= @order.id %></h1>
-
 <p><strong>購入者:</strong> <%= @order.customer_name %></p>
 <p><strong>メールアドレス:</strong> <%= @order.customer_email %></p>
 <p><strong>注文日時:</strong> <%= l(@order.created_at, format: :long) %></p>
-
 <h2>ご注文商品</h2>
 <table>
   <thead>
@@ -36,7 +34,5 @@
     <% end %>
   </tbody>
 </table>
-
 <h3>合計金額: <%= number_to_currency(@order.total_price, unit: "¥") %></h3>
-
 <%= link_to '一覧に戻る', admin_orders_path %>
