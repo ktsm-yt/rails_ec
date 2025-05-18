@@ -8,6 +8,7 @@ class Product < ApplicationRecord
   end
   has_one_attached :image # Active recode
   has_many :cart_items, dependent: :destroy
+  has_many :order_items, dependent: :nullify
 
   def discounted?
     original_price.present? && original_price > price
