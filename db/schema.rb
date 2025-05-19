@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_04_30_100400) do
+ActiveRecord::Schema[7.0].define(version: 2025_05_13_210849) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -59,6 +59,44 @@ ActiveRecord::Schema[7.0].define(version: 2025_04_30_100400) do
     t.index ["session_id"], name: "index_carts_on_session_id", unique: true
   end
 
+  create_table "checkouts", force: :cascade do |t|
+    t.string "first_name", null: false
+    t.string "last_name", null: false
+    t.string "username", null: false
+    t.string "email", null: false
+    t.string "address1", null: false
+    t.string "address2"
+    t.bigint "country_id", null: false
+    t.bigint "state_id", null: false
+    t.string "zip", null: false
+    t.boolean "shipping_same_as_billing"
+    t.boolean "save_info_for_next_time"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "cart_id", null: false
+    t.index ["cart_id"], name: "index_checkouts_on_cart_id"
+    t.index ["country_id"], name: "index_checkouts_on_country_id"
+    t.index ["state_id"], name: "index_checkouts_on_state_id"
+  end
+
+  create_table "countries", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_countries_on_name", unique: true
+  end
+
+  create_table "credit_cards", force: :cascade do |t|
+    t.string "name_on_card", null: false
+    t.string "card_number", null: false
+    t.integer "expiration_month", null: false
+    t.integer "expiration_year", null: false
+    t.bigint "checkout_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["checkout_id"], name: "index_credit_cards_on_checkout_id"
+  end
+
   create_table "products", force: :cascade do |t|
     t.string "name", null: false
     t.text "description", null: false
@@ -72,8 +110,23 @@ ActiveRecord::Schema[7.0].define(version: 2025_04_30_100400) do
     t.integer "rating"
   end
 
+  create_table "states", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "country_id", null: false
+    t.index ["country_id", "name"], name: "index_states_on_country_id_and_name", unique: true
+    t.index ["country_id"], name: "index_states_on_country_id"
+    t.index ["name"], name: "index_states_on_name", unique: true
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "cart_items", "carts"
   add_foreign_key "cart_items", "products"
+  add_foreign_key "checkouts", "carts"
+  add_foreign_key "checkouts", "countries"
+  add_foreign_key "checkouts", "states"
+  add_foreign_key "credit_cards", "checkouts"
+  add_foreign_key "states", "countries"
 end

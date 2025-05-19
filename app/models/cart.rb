@@ -1,7 +1,7 @@
 class Cart < ApplicationRecord
   has_many :cart_items, dependent: :destroy
   has_many :products, through: :cart_items
-
+  has_one :checkout, dependent: :destroy
   validates :session_id, presence: true, uniqueness: true
 
   def add_product(product, quantity = 1)

@@ -5,6 +5,25 @@ class Customer::CartController < ApplicationController
 
   def show
     @cart_items = @current_cart.cart_items.includes(:product).order(created_at: :asc)
+
+    @united_states = Country.find_by(name: 'United States')
+    @california = State.find_by(name: 'California', country: @united_states)
+    # 中身がnilでも必ず配列を作成する
+    @countries = [@united_states].compact
+    @states = [@california].compact
+
+    # もしフォームにデータがあれば読み込む
+    if session[:checkout_params]
+      @checkout = Checkout.new(session[:checkout_params])
+      # 一度利用したsessionを無駄に保持するとエラーの温床なのでクリアして更新に備える
+      session.delete(:checkout_params)
+    else
+      @checkout = Checkout.new
+      @checkout.build_credit_card # has_oneのときの書き方。普通は.build
+    end
+    # なぜかリダイレクト後にpayment以下が消えちゃう
+    # CreditCardオブジェクトが存在しない場合にビルド
+    @checkout.build_credit_card unless @checkout.credit_card
   end
 
   # current_cartは現在のユーザーセッションに関連付けられているCartのobj
@@ -54,10 +73,6 @@ class Customer::CartController < ApplicationController
   # 必然性のある項目なので例外の出るfindをあえて利用
   def set_cart_item
     @cart_item = @current_cart.cart_items.find(params[:id])
-  end
-
-  def set_current_cart
-    @current_cart = Cart.find_or_create_by(session_id: session.id.to_s)
   end
 
   # Product.find または CartItem.find で ActiveRecord::RecordNotFound が発生した場合

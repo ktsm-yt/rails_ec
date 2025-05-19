@@ -15,10 +15,6 @@ class Customer::ProductsController < ApplicationController
 
   private
 
-  def set_current_cart
-    @current_cart = Cart.find_or_create_by(session_id: session.id.to_s)
-  end
-
   def set_cart_items
     @cart_items = @current_cart.cart_items
   end
