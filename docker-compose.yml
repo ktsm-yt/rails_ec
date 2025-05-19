@@ -9,7 +9,7 @@ services:
   web:
     build: .
     image: rails_template:latest
-    command: bundle exec rails s -p 3000 -b '0.0.0.0'
+    command: bundle exec bin/dev
     volumes:
       - .:/myapp
       - bundle:/usr/local/bundle
@@ -18,21 +18,6 @@ services:
       - "3000:3000"
     depends_on:
       - db
-  js:
-    image: rails_template:latest
-    command: yarn build --watch
-    volumes:
-      - .:/myapp
-      - bundle:/usr/local/bundle
-      - node_modules:/myapp/node_modules
-    tty: true
-  css:
-    image: rails_template:latest
-    command: yarn build:css --watch
-    volumes:
-      - .:/myapp
-      - bundle:/usr/local/bundle
-      - node_modules:/myapp/node_modules
     tty: true
 volumes:
   db:

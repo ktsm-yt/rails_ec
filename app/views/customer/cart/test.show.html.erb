@@ -1,0 +1,53 @@
+<!-- app/views/carts/show.html.erb -->
+<div class="cart-page">
+  <h1>ショッピングカート</h1>
+  <% if @cart_items.empty? %>
+    <p>カートに商品がありません。</p>
+    <%= link_to '商品一覧に戻る', products_path, class: 'btn btn-primary' %>
+  <% else %>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>商品名</th>
+          <th>単価</th>
+          <th>数量</th>
+          <th>小計</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @cart_items.each do |item| %>
+          <tr>
+            <td><%= item.product.name %></td>
+            <td><%= number_to_currency(item.product.price) %></td>
+            <td>
+              <%= form_with url: update_item_cart_path(item), method: :patch, data: { turbo: false } do %>
+                <%= number_field_tag :quantity, item.quantity, min: 1, max: 99 %>
+                <%= submit_tag '更新', class: 'btn btn-sm btn-outline-secondary' %>
+              <% end %>
+            </td>
+            <td><%= number_to_currency(item.product.price * item.quantity) %></td>
+            <td>
+              <%= link_to '削除', remove_item_cart_path(item), 
+                  data: {turbo_method: :delete, turbo_confirm: '本当に削除しますか？'}, 
+                  class: 'btn btn-sm btn-danger' %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3" class="text-right"><strong>合計:</strong></td>
+          <td><%= number_to_currency(@current_cart.total_price) %></td>
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
+    <div class="cart-actions">
+      <%= link_to 'カートを空にする', clear_cart_path, 
+        data: {turbo_method: :delete, turbo_confirm: 'カートを空にしますか？'}, 
+        class: 'btn btn-outline-danger' %>
+      <%= link_to '買い物を続ける', products_path, class: 'btn btn-outline-primary' %>
+    </div>
+  <% end %>
+</div>

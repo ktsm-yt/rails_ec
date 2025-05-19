@@ -15,7 +15,6 @@
         <%= link_to product_path(product), class: "text-decoration-none text-dark" do %>
           <h5 class="fw-bolder"><%= product.name %></h5>
         <% end %>
-
         <!-- Product reviews-->
         <% if product.rating && product.rating.to_i > 0 %>
           <div class="d-flex justify-content-center small text-warning mb-2">
@@ -38,7 +37,9 @@
     <!-- Product actions-->
     <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
       <div class="text-center">
-          <%= link_to "Add to cart", "#", class: "btn btn-outline-dark mt-auto" %>
+        <%= button_to "Add to cart", add_item_cart_path,
+            params: {product_id: product.id, quantity: 1},
+            class: "btn btn-outline-dark mt-auto" %>
       </div>
     </div>
   </div>

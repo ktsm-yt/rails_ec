@@ -1,6 +1,8 @@
 class Admin::ProductsController < ApplicationController
   http_basic_authenticate_with name: 'admin', password: 'pw'
   before_action :set_product, only: %i[show edit update destroy]
+  rescue_from ActiveRecord::RecordNotFound, with: :handle_product_not_found
+
   def index
     @products = Product.includes(image_attachment: :blob).all
   end
@@ -43,5 +45,9 @@ class Admin::ProductsController < ApplicationController
 
   def product_params
     params.require(:product).permit(:name, :description, :price, :stock, :image)
+  end
+
+  def handle_product_not_found
+    redirect_to root_path, alert: 'その商品は存在していません'
   end
 end

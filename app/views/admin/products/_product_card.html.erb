@@ -15,7 +15,6 @@
         <%= link_to admin_product_path(product), class: "text-decoration-none text-dark" do %>
           <h5 class="fw-bolder"><%= product.name %></h5>
         <% end %>
-
         <!-- Product reviews-->
         <% if product.rating && product.rating.to_i > 0 %>
           <div class="d-flex justify-content-center small text-warning mb-2">
@@ -38,8 +37,8 @@
     <!-- Product actions-->
     <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
       <div class="text-center">
-          <%= link_to "編集", edit_admin_product_path(product), class: "btn btn-outline-dark" %>
-          <%= link_to "削除", admin_product_path(product),
+        <%= link_to "編集", edit_admin_product_path(product), class: "btn btn-outline-dark" %>
+        <%= link_to "削除", admin_product_path(product),
               class: "btn btn-outline-danger",
               data: {
                 turbo_confirm: "本当に「#{product.name}」を削除してよろしいですか?", 

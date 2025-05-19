@@ -7,6 +7,7 @@ class Product < ApplicationRecord
     validates :price
   end
   has_one_attached :image # Active recode
+  has_many :cart_items, dependent: :destroy
 
   def discounted?
     original_price.present? && original_price > price

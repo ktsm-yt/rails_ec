@@ -5,14 +5,17 @@ Rails.application.routes.draw do
 
   namespace :admin do
     root to: 'products#index'
-    resources :products, only: %i[index show new create edit update destroy]
+    resources :products
   end
 
   scope module: :customer do
     resources :products, only: %i[index show]
-  end
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
-  # Defines the root path route ("/")
-  # root "articles#index"
+    resource :cart, only: %i[show destroy], controller: 'cart' do # 単数形でidなしの通常ルート
+      post :add_item
+      patch 'update_item/:id', action: :update_item, as: :update_item # pathが文字列なのでaction明示
+      delete 'remove_item/:id', action: :remove_item, as: :remove_item
+    end
+  end
+  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html 
 end
