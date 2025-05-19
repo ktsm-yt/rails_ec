@@ -1,0 +1,45 @@
+<div class="col mb-5">
+  <div class="card h-100">
+    <% if product.on_sale? %>
+      <!-- Sale badge-->
+      <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
+    <% end %>
+    <!-- Product image-->
+    <%= link_to product_path(product) do %>
+      <%= image_tag product.image, class: "card-img-top", alt: product.name %>
+    <% end %>
+    <!-- Product details-->
+    <div class="card-body p-4">
+      <div class="text-center">
+        <!-- Product name-->
+        <%= link_to product_path(product), class: "text-decoration-none text-dark" do %>
+          <h5 class="fw-bolder"><%= product.name %></h5>
+        <% end %>
+
+        <!-- Product reviews-->
+        <% if product.rating && product.rating.to_i > 0 %>
+          <div class="d-flex justify-content-center small text-warning mb-2">
+            <% product.rating.to_i.times do %>
+              <div class="bi-star-fill"></div>
+            <% end %>
+          </div>
+        <% end %>
+        <!-- Product price-->
+        <% if product.on_sale? %>
+          <span class="text-muted text-decoration-line-through"><%= number_to_currency(product.original_price) %></span>
+        <% end %>
+        <% if product.price_range? %>
+          <%= product.price %>
+        <% else %>
+          <%= number_to_currency(product.price) %>
+        <% end %>
+      </div>
+    </div>
+    <!-- Product actions-->
+    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+      <div class="text-center">
+          <%= link_to "Add to cart", "#", class: "btn btn-outline-dark mt-auto" %>
+      </div>
+    </div>
+  </div>
+</div>

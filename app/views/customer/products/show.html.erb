@@ -1,0 +1,58 @@
+<!-- Product section-->
+<section class="py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="row gx-4 gx-lg-5 align-items-center">
+            <div class="col-md-6">
+            <%= image_tag @product.image.variant(resize_to_limit:[600,700]), class:"card-img-top mb-5 mb-md-0", alt: @product.name %>
+            </div>
+
+            <div class="col-md-6">
+            <% if @product.on_sale? %>
+                <div class="badge bg-dark text-white position-relative" style="top: -1rem;right:0;">Sale</div>
+            <% end %>
+
+                <h1 class="display-5 fw-bolder"><%= @product.name %></h1>
+
+                <div class="d-flex small text-warning mb-2">
+                <% @product.rating.to_i.times do %>
+                    <div class="bi-star-fill"></div>
+                <% end %>
+                </div>
+
+                <div class="fs-5 mb-5">
+                    <% if @product.on_sale? && @product.price.present? %>
+                        <span class="text-decoration-line-through"><%= number_to_currency(@product.price) %></span>
+                    <% end %>
+                    <% if @product.price_range? %>
+                        <%= @product.price %>
+                    <% else %>
+                        <%= number_to_currency(@product.price) %>
+                    <% end %>
+                </div>
+                
+                <p class="lead"><%= @product.description %></p>
+                
+                <div class="d-flex">
+                    <input class="form-control text-center me-3" id="inputQuantity" type="num" value="1" style="max-width: 3rem" />
+                    <button class="btn btn-outline-dark flex-shrink-0" type="button">
+                        <i class="bi-cart-fill me-1"></i>
+                        Add to cart
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Related items section-->
+<% if @related_products.present? %>
+    <section class="py-5 bg-light">
+        <div class="container px-4 px-lg-5 mt-5">
+            <h2 class="fw-bolder mb-4">Related products</h2>
+            <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                <% @related_products.each do |product| %>
+                    <%= render partial: 'customer/products/product_card', locals: { product: product } %>
+                <% end %>
+            </div>
+        </div>
+    </section>
+<% end %>
