@@ -31,7 +31,7 @@ class Customer::CartController < ApplicationController
 
   def remove_item
     @cart_item.destroy
-    @cart_items = @current_cart.cart_items.includes(:product).order(created_at: :asc)
+    load_cart_items
     flash.now[:notice] = 'カートから商品を削除しました'
 
     respond_to do |format|
@@ -66,7 +66,7 @@ class Customer::CartController < ApplicationController
   def update_cart_item_quantity(quantity)
     if quantity.positive?
       if @cart_item.update(quantity: quantity)
-        @cart_items = @current_cart.cart_items.includes(:product).order(created_at: :asc) # カートアイテムを再取得
+        load_cart_items
         flash.now[:notice] = '数量を更新しました'
         respond_to do |format|
           format.html {redirect_to cart_path, notice: '数量を更新しました'}
@@ -83,7 +83,7 @@ class Customer::CartController < ApplicationController
       end
     else
       @cart_item.destroy
-      @cart_items = @current_cart.cart_items.includes(:product).order(created_at: :asc) # カートアイテムを再取得
+      load_cart_items
       flash.now[:notice] = 'カートから商品を削除しました'
       respond_to do |format|
         format.html { redirect_to cart_path, notice: 'カートから商品を削除しました' } # HTMLリクエストの場合はリダイレクト（フォールバック）
