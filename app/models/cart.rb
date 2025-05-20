@@ -30,15 +30,15 @@ class Cart < ApplicationRecord
   # end
 
   # 割引適用
-  def apply_discount(amount, code = nil)
+  def apply_discount(amount, _ = nil)
     # 自身のDBを更新
     self.discount_amount = amount
-    self.promotion_code
-      save
+    promotion_code
+    save
   end
 
   def promotion_code_object
-    PromotionCode.find_by(code:promotion_code) if promotion_code.present?
+    PromotionCode.find_by(code: promotion_code) if promotion_code.present?
   end
 
   def total_price

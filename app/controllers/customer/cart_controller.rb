@@ -1,4 +1,6 @@
 class Customer::CartController < ApplicationController
+  include Customer::CheckoutFormHandler
+
   before_action :set_current_cart
   before_action :set_cart_item, only: %i[update_item remove_item]
   rescue_from ActiveRecord::RecordNotFound, with: :handle_record_not_found
@@ -45,10 +47,10 @@ class Customer::CartController < ApplicationController
 
     # 有効なcodeを探す
     promotion_code = PromotionCode.find_by(code: promo_code, active: true, used: false)
-    if promotion_code 
+    if promotion_code
       @current_cart.apply_discount(promotion_code.discount_amount)
       # カートにコードの文字列を保存
-      @current_cart.update_column(:promotion_code, promotion_code.code)
+      @current_cart.update(promotion_code: promotion_code.code)
       promotion_code.update(used: true) # DB更新 一度だけ
       flash[:notice] = 'プロモーションコードを適用しました！'
     else
@@ -70,26 +72,6 @@ class Customer::CartController < ApplicationController
     redirect_to cart_path, alert: '指定されたアイテムは見つかりませんでした'
   end
 
-  def set_location_data
-    @united_states = Country.find_by(name: 'United States')
-    @california = State.find_by(name: 'California', country: @united_states)
-    @countries = [@united_states].compact # 中身がnilでも必ず配列を作成する
-    @states = [@california].compact
-  end
-
-  # showメソッドからチェックアウトフォームを抽出
-  def initialize_checkout_form
-    # もしフォームにデータがあれば読み込む
-    if session[:checkout_params]
-      @checkout = Checkout.new(session[:checkout_params])
-    else
-      @checkout = Checkout.new
-      @checkout.build_credit_card # has_oneのときの書き方。has_manyは.build
-    end
-    # CreditCardオブジェクトが存在しない場合にビルド
-    @checkout.build_credit_card unless @checkout.credit_card
-  end
-
   def update_cart_item_quantity(quantity)
     if quantity.positive?
       if @cart_item.update(quantity: quantity)
@@ -103,49 +85,5 @@ class Customer::CartController < ApplicationController
     end
 
     true # 処理完了
-  end
-
-  # 数量更新に成功/失敗、あるいはアイテム削除された後
-  # チェックアウトフォームの入力内容を保持するため、セッションに保存する
-  def save_checkout_data_to_session
-    checkout_data = extract_checkout_data_from_params
-    session[:checkout_params] = checkout_data if checkout_data.present?
-  end
-
-  def extract_checkout_data_from_params
-    checkout_data = {}
-    # 基本フィールドの抽出
-    %i[first_name
-       last_name
-       username
-       email
-       address1
-       address2
-       country_id
-       state_id
-       zip
-       shipping_same_as_billing
-       save_info_for_next_time].each do |field|
-      checkout_data[field] = params[field] if params[field].present?
-    end
-
-    add_credit_card_attributes(checkout_data)
-
-      checkout_data
-  end
-
-  # クレジットカード情報の抽出
-  def add_credit_card_attributes(checkout_data)
-    return checkout_data if params[:card_number].blank?
-
-    checkout_data[:credit_card_attributes] = {
-      name_on_card: params[:name_on_card],
-      card_number: params[:card_number],
-      expiration_month: params[:expiration_month],
-      expiration_year: params[:expiration_year],
-      cvv: params[:cvv]
-    }.compact
-
-    checkout_data
   end
 end
