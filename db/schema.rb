@@ -132,7 +132,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_20_092151) do
 
   create_table "promotion_codes", force: :cascade do |t|
     t.string "code", null: false
-    t.integer "discount_amount", null: false
+    t.decimal "discount_amount", null: false
     t.boolean "active", default: true, null: false
     t.datetime "expires_at"
     t.boolean "used", default: false, null: false
