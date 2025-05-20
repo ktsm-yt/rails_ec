@@ -27,7 +27,7 @@ class Customer::CartController < ApplicationController
     return unless update_cart_item_quantity(quantity)
 
     save_checkout_data_to_session
-    redirect_to cart path
+    redirect_to cart_path
   end
 
   def remove_item
@@ -38,6 +38,22 @@ class Customer::CartController < ApplicationController
   def destroy
     @current_cart.cart_items.destroy_all
     redirect_to root_path, notice: 'カートを空にしました'
+  end
+
+  def apply_promo_code
+    promo_code = params[:promo_code]
+    
+    # 有効なcodeを探す
+    promotion_code = PromotionCode.find_by(code: promo_code, active: true, used: false)
+    if promotion_code 
+      @current_cart.apply_discount(promotion_code.discount_amount)
+      promotion_code.update(used: true) # DB更新 一度だけ
+      flash[:notice] = 'プロモーションコードを適用しました！'
+    else
+      flash[:alert] = '無効なプロモーションコードです'
+    end
+
+    redirect_to cart_path
   end
 
   private
@@ -110,6 +126,10 @@ class Customer::CartController < ApplicationController
        save_info_for_next_time].each do |field|
       checkout_data[field] = params[field] if params[field].present?
     end
+
+    add_credit_card_attributes(checkout_data)
+
+      checkout_data
   end
 
   # クレジットカード情報の抽出

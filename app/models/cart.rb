@@ -29,8 +29,17 @@ class Cart < ApplicationRecord
   #   end
   # end
 
+  # 割引適用
+  def apply_discount(amount, code = nil)
+    # 自身のDBを更新
+    self.discount_amount = amount
+    self.promotion_code = code
+      save
+  end
+
   def total_price
-    cart_items.sum { |item| item.product.price * item.quantity }
+    subtotal = cart_items.sum { |item| item.product.price * item.quantity }
+    [subtotal - (discount_amount || 0), 0].max # 0以下になったら0にする
   end
 
   private
