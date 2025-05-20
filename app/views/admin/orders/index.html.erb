@@ -1,0 +1,28 @@
+<%# app/views/admin/orders/index.html.erb %>
+<h1>購入明細一覧</h1>
+<table>
+  <thead>
+    <tr>
+      <th>注文ID</th>
+      <th>購入者</th>
+      <th>メールアドレス</th>
+      <th>合計金額</th>
+      <th>注文日時</th>
+      <th>アクション</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @orders.each do |order| %>
+      <tr>
+        <td><%= order.id %></td>
+        <td><%= order.customer_name %></td>
+        <td><%= order.customer_email %></td>
+        <td><%= number_to_currency(order.total_price, unit: "$") %></td>
+        <td><%= l(order.created_at, format: :long) %></td>
+        <%# lって何メソッド?%>
+        <td><%= link_to '詳細', admin_order_path(order) %></td>
+        <%# 詳細リンクadmin じゃないよね。顧客は見れないし%>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

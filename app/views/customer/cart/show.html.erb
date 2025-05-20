@@ -3,9 +3,7 @@
     <div class="py-5 text-center">
       <h1 class="h2">ショッピングカート</h1>
       <p class="lead"></p>
-
       <%= render 'shared/flash_messages' %>
-
       <% if @cart_items.empty? %>
         <p>カートに商品がありません。</p>
         <%= link_to '商品一覧に戻る', products_path, class: 'btn btn-primary' %>
@@ -128,10 +126,9 @@
                       </div>
                     </div>
                   </div>
-                  <%# cvvはデータベースに保存しないのでcheckoutフォームで処理 %>
                   <div class="col-md-3">
-                    <%= f.label :cvv, 'CVV', class: 'form-label' %>
-                    <%= f.text_field :cvv, class: 'form-control', required: true %>
+                    <%= ff.label :cvv, 'CVV', class: 'form-label' %>
+                    <%= ff.text_field :cvv, class: 'form-control', required: true %>
                   </div>
                 </div>
               <% end %>
