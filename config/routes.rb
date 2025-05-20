@@ -23,7 +23,8 @@ Rails.application.routes.draw do
       post :add_item
       patch 'update_item/:id', action: :update_item, as: :update_item # pathが文字列なのでaction明示
       delete 'remove_item/:id', action: :remove_item, as: :remove_item
-      post :apply_promo_code, on: :collection # cart全体への適用(ID含まず)
+
+      post 'save_checkout_draft', on: :collection
     end
 
     resource :checkout, only: [:create]

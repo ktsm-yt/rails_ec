@@ -1,9 +1,11 @@
 <div class="container">
-  <main>
+  <main id="main-content">
     <div class="py-5 text-center">
       <h1 class="h2">ショッピングカート</h1>
       <p class="lead"></p>
-      <%= render 'shared/flash_messages' %>
+      <div id="flash-messages">
+        <%= render 'shared/flash_messages' %>
+      </div>
       <% if @cart_items.empty? %>
         <p>カートに商品がありません。</p>
         <%= link_to '商品一覧に戻る', products_path, class: 'btn btn-primary' %>
@@ -36,7 +38,7 @@
                     class: 'btn btn-sm btn-danger' do %>
                     <i class="bi bi-trash"></i> カートを空にする
                   <% end %>
-                  <strong class="ms-auto text-end">Total(USD) <%= number_to_currency(@current_cart.total_price) %></strong>
+                  <strong class="ms-auto text-end" id="cart-total-price">Total(USD) <%= number_to_currency(@current_cart.total_price) %></strong>
                 </div>
               </li>
             </ul>
@@ -47,9 +49,9 @@
               </div>
             <% end %>
           </div>
-          <div class="col-md-7 col-lg-8 text-start" >
+          <div class="col-md-7 col-lg-8 text-start" data-controller="checkout-form" >
             <h4 class="mb-3">Billing address</h4>
-            <%= form_with model: @checkout, url: checkout_path, local: true, data: { turbo: false }, html: {class: "needs-validation", novalidate: true } do |f|  %>
+            <%= form_with model: @checkout, url: checkout_path, local: true, data: { turbo: false, checkout_form_target: "form"}, html: {class: "needs-validation", novalidate: true } do |f|  %>
               <div class="row g-3">
                 <div class="col-sm-6">
                   <%= f.label :first_name, "First name", class: "form-label", required: true %>

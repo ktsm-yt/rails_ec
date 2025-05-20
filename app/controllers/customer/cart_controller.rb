@@ -26,15 +26,18 @@ class Customer::CartController < ApplicationController
   def update_item
     quantity = params[:quantity].to_i
 
-    return unless update_cart_item_quantity(quantity)
-
-    save_checkout_data_to_session
-    redirect_to cart_path
+    update_cart_item_quantity(quantity)
   end
 
   def remove_item
     @cart_item.destroy
-    redirect_to cart_path, notice: 'カートから商品を削除しました'
+    @cart_items = @current_cart.cart_items.includes(:product).order(created_at: :asc)
+    flash.now[:notice] = 'カートから商品を削除しました'
+
+    respond_to do |format|
+      format.html {redirect_to cart_path, notice: 'カートから商品を削除しました'}
+      format.turbo_stream
+    end
   end
 
   def destroy
@@ -42,17 +45,10 @@ class Customer::CartController < ApplicationController
     redirect_to root_path, notice: 'カートを空にしました'
   end
 
-  def apply_promo_code
-    result = @current_cart.apply_promo_code(params[:promo_code])
-
-    # ハッシュで呼び出すと必要情報を柔軟に取り出せる。
-    if result[:success]
-      flash[:notice] = 'プロモーションコードを適用しました！'
-    else
-      flash[:alert] = result[:message] || '無効なプロモーションコードです'
-    end
-
-    redirect_to cart_path
+  def save_checkout_draft
+    checkout_data = checkout_params
+    session[:checkout_params] = checkout_data.to_h if checkout_data.present?
+    head :ok
   end
 
   private
@@ -69,14 +65,30 @@ class Customer::CartController < ApplicationController
 
   def update_cart_item_quantity(quantity)
     if quantity.positive?
-      if @cart_item.update(quantity:)
-        flash[:notice] = '数量を更新しました'
+      if @cart_item.update(quantity: quantity)
+        @cart_items = @current_cart.cart_items.includes(:product).order(created_at: :asc) # カートアイテムを再取得
+        flash.now[:notice] = '数量を更新しました'
+        respond_to do |format|
+          format.html {redirect_to cart_path, notice: '数量を更新しました'}
+          format.turbo_stream
+        end
       else
-        flash[:alert] = @cart_item.errors.full_messages.join(', ') # エラーメッセージを表示
+        flash.now[:alert] = @cart_item.errors.full_messages.join(', ') # エラーメッセージを表示
+        respond_to do |format|
+          format.html {redirect_to root_path, alert: @cart_item.errors.full_messages.join(', ')}
+          format.turbo_stream do
+            render turbo_stream: turbo_stream.update('flash-messages', partial: 'shared/flash_messages')
+          end
+        end
       end
     else
       @cart_item.destroy
-      flash[:notice] = 'カートから商品を削除しました'
+      @cart_items = @current_cart.cart_items.includes(:product).order(created_at: :asc) # カートアイテムを再取得
+      flash.now[:notice] = 'カートから商品を削除しました'
+      respond_to do |format|
+        format.html { redirect_to cart_path, notice: 'カートから商品を削除しました' } # HTMLリクエストの場合はリダイレクト（フォールバック）
+        format.turbo_stream # update_item.turbo_stream.erb をレンダリング（削除されたアイテムは表示されなくなる）
+      end
     end
   end
 end
