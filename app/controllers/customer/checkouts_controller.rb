@@ -49,7 +49,8 @@ class Customer::CheckoutsController < ApplicationController
       create_order_items
       update_order_total
       clear_cart
-      send_confirmation_email
+      send_order_confirmation_email
+      reset_promo_code
       redirect_to products_path, notice: '購入ありがとうございます'
     end
   rescue StandardError => e
@@ -85,7 +86,9 @@ class Customer::CheckoutsController < ApplicationController
   end
 
   def update_order_total
-    @order.update!(total_price: @total_price)
+    # カートの合計金額から割引額を差し引く
+    discounted_total = @total_price - (@current_cart.discount_amount || 0)
+    @order.update!(total_price: discounted_total)
   end
 
   def clear_cart
@@ -96,8 +99,12 @@ class Customer::CheckoutsController < ApplicationController
     OrderMailer.order_confirmation_email(@order).deliver_later
   end
 
+  def reset_promo_code
+    @current_cart.update!(promotion_code: nil, discount_amount: nil)
+  end
+
   def log_error(exception)
     Rails.logger.error "Order creation failed: #{exception.message}"
-    Rails.logger.error e.backtrace.join("\n")
+    Rails.logger.error exception.backtrace.join("\n")
   end
 end
