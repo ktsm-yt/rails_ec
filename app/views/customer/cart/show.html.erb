@@ -18,31 +18,38 @@
               <% @cart_items.each do |item|%>
                 <%= render partial: 'customer/cart/cart_item', locals: {item: item} %>
               <% end %>
-              <%# <li class="list-group-item d-flex justify-content-between bg-body-tertiary">
-                  <div class="text-success">
-                    <h6 class="my-0">Promo code</h6>
-                    <small>EXAMPLECODE</small>
+
+              <% if @current_cart.respond_to?(:discount_amount) && @current_cart.discount_amount && @current_cart.discount_amount > 0 %>
+              <div class="card p-2 mt-2 bg-light">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <div class="text-success">Promo code</div>
+                    <span class="text-success"><%= @current_cart.promotion_code %></span>
                   </div>
-                  <span class="text-success">−$5</span>
-                <%# </li> %>
+                  <span class="text-success">-<%= number_to_currency(@current_cart.discount_amount) %></span>
+                </div>
+              </div>
+              <% end %>
+                 
+
               <li class="list-group-item d-flex justify-content-between">
-                <%# <span>Total (USD)</span> %>
                 <div class="d-flex w-100 justify-content-between align-items-center">
                   <%= link_to cart_path,
                     data: {turbo_method: :delete, turbo_confirm: '本当にカート内を全て削除しますか？'},
                     class: 'btn btn-sm btn-danger' do %>
                     <i class="bi bi-trash"></i> カートを空にする
                   <% end %>
+
                   <strong class="ms-auto text-end">Total(USD) <%= number_to_currency(@current_cart.total_price) %></strong>
                 </div>
               </li>
             </ul>
-            <%# <form class="card p-2">
+              <%= form_with url: apply_promo_code_cart_path, method: :post, data: { turbo: false }, class: 'card p-2' do %>
                 <div class="input-group">
-                  <input type="text" class="form-control" placeholder="Promo code">
-                  <button type="submit" class="btn btn-secondary">Redeem</button>
+                  <%= text_field_tag :promo_code, nil, class: 'form-control', placeholder: 'Promo code' %>
+                  <%= submit_tag 'Redeem', class: 'btn btn-secondary' %>
                 </div>
-              </form> %>
+              <% end %>
           </div>
           <div class="col-md-7 col-lg-8 text-start" >
             <h4 class="mb-3">Billing address</h4>
