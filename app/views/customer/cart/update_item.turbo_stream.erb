@@ -1,0 +1,22 @@
+<% if @cart_item&.persisted? %> <%# アイテムがまだ存在する場合（数量更新成功） %>
+  <%= turbo_stream.replace dom_id(@cart_item) do %>
+    <%= render partial: 'customer/cart/cart_item', locals: {item: @cart_item} %>
+  <% end %>
+<% else %> <%# アイテムが削除された場合 %>
+  <%= turbo_stream.remove dom_id(@cart_item) %>
+<% end %>
+
+<%# カート合計金額の更新 %>
+<%= turbo_stream.update 'cart-total-price' do %>
+  <%= number_to_currency(@current_cart.total_price) %>
+<% end %>
+
+<%# カートアイテム数の更新 %>
+<%= turbo_stream.update 'cart-items-count' do %>
+  <%= @cart_items.sum(:quantity) %>
+<% end %>
+
+<%# フラッシュメッセージの更新 %>
+<%= turbo_stream.update 'flash-messages' do %>
+  <%= render 'shared/flash_messages' %>
+<% end %>
