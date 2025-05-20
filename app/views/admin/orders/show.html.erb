@@ -34,5 +34,8 @@
     <% end %>
   </tbody>
 </table>
-<h3>合計金額: <%= number_to_currency(@order.total_price, unit: "¥") %></h3>
+<% if @order.respond_to?(:discount_amount) && @order.discount_amount.present? && @order.discount_amount > 0 %>
+  <h5>プロモーションコード割引額: <%= number_to_currency(@order.discount_amount, unit: "¥") %></h4>
+<% end %>
+<h3>合計金額: <%= number_to_currency(@order.total_price, unit: "¥") %></h5>
 <%= link_to '一覧に戻る', admin_orders_path %>
