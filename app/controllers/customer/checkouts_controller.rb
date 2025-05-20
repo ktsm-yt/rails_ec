@@ -61,10 +61,15 @@ class Customer::CheckoutsController < ApplicationController
 
   # Orderの作成 checkoutからデータ取得
   def create_order_from_checkout
+    # checkoutに関連付けられたカートから割引情報を取得
+    cart = @checkout.cart
+
     @order = Order.create!(
       customer_name: "#{@checkout.first_name} #{@checkout.last_name}",
       customer_email: @checkout.email,
-      total_price: 0
+      total_price: 0,
+      discount_amount: cart.discount_amount,
+      promotion_code: cart.promotion_code
     )
   end
 
