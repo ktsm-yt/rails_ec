@@ -43,18 +43,13 @@ class Customer::CartController < ApplicationController
   end
 
   def apply_promo_code
-    promo_code = params[:promo_code]
+    result = @current_cart.apply_promo_code(params[:promo_code])
 
-    # 有効なcodeを探す
-    promotion_code = PromotionCode.find_by(code: promo_code, active: true, used: false)
-    if promotion_code
-      @current_cart.apply_discount(promotion_code.discount_amount)
-      # カートにコードの文字列を保存
-      @current_cart.update(promotion_code: promotion_code.code)
-      promotion_code.update(used: true) # DB更新 一度だけ
+    # ハッシュで呼び出すと必要情報を柔軟に取り出せる。
+    if result[:success]
       flash[:notice] = 'プロモーションコードを適用しました！'
     else
-      flash[:alert] = '無効なプロモーションコードです'
+      flash[:alert] = result[:message] || '無効なプロモーションコードです'
     end
 
     redirect_to cart_path
