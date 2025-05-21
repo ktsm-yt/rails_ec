@@ -16,7 +16,6 @@ module Customer
         @checkout = Checkout.new(session[:checkout_params])
       else
         @checkout = Checkout.new
-        @checkout.build_credit_card # has_oneのときの書き方。has_manyは.build
       end
       # CreditCardオブジェクトが存在しない場合にビルド
       @checkout.build_credit_card unless @checkout.credit_card
