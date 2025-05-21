@@ -46,7 +46,7 @@ class Cart < ApplicationRecord
 
   def total_price
     subtotal_price
-    [subtotal - (discount_amount || 0), 0].max # 0以下になったら0にする
+    [subtotal_price - (discount_amount || 0), 0].max # 0以下になったら0にする
   end
 
   private
