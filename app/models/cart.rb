@@ -35,8 +35,7 @@ class Cart < ApplicationRecord
   # 割引適用
   def apply_discount(amount)
     # 自身のDBを更新
-    self.discount_amount = amount
-    save
+    update(discount_amount: amount)
   end
 
   def subtotal_price
