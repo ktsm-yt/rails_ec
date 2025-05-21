@@ -12,11 +12,11 @@ module Customer
     # showメソッドからチェックアウトフォームを抽出
     def initialize_checkout_form
       # もしフォームにデータがあれば読み込む
-      if session[:checkout_params]
-        @checkout = Checkout.new(session[:checkout_params])
-      else
-        @checkout = Checkout.new
-      end
+      @checkout = if session[:checkout_params]
+                    Checkout.new(session[:checkout_params])
+                  else
+                    Checkout.new
+                  end
       # CreditCardオブジェクトが存在しない場合にビルド
       @checkout.build_credit_card unless @checkout.credit_card
     end

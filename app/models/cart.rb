@@ -15,7 +15,6 @@ class Cart < ApplicationRecord
     end
   end
 
-
   def apply_promo_code(code)
     # 有効なcodeを探す
     promotion_code = PromotionCode.find_by(code: code, active: true, used: false)
@@ -25,9 +24,9 @@ class Cart < ApplicationRecord
       update(promotion_code: promotion_code.code)
       promotion_code.update(used: true) # DB更新 使い切り
       # 戻り値をハッシュで返す と意味が明確。情報を複数送ることもできる
-      {success: true} 
+      { success: true }
     else
-      {success: false, message:'無効なプロモーションコードです'}
+      { success: false, message: '無効なプロモーションコードです' }
     end
 
     redirect_to cart_path
@@ -41,7 +40,7 @@ class Cart < ApplicationRecord
   end
 
   def subtotal_price
-    subtotal = cart_items.sum { |item| item.product.price * item.quantity }
+    cart_items.sum { |item| item.product.price * item.quantity }
   end
 
   def total_price

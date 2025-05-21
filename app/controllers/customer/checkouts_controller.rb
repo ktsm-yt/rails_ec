@@ -8,7 +8,7 @@ class Customer::CheckoutsController < ApplicationController
       return
     end
     @checkout = @current_cart.build_checkout(checkout_params)
-  
+
     if @checkout.save
       begin
         OrderProcessor.new(checkout: @checkout, cart: @current_cart).call

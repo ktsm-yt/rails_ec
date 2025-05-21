@@ -1,26 +1,26 @@
 class OrderProcessor
   attr_reader :checkout, :cart, :order, :total_price
 
-def initialize(checkout:, cart:)
-  @checkout = checkout
-  @cart = cart # checkoutに関連付けられたカートから割引情報を取得
-  @total_price = 0
-end
-
-def call
-  ActiveRecord::Base.transaction do
-    create_order_from_checkout
-    create_order_items
-    update_order_total
-    clear_cart
-    send_order_confirmation_email
+  def initialize(checkout:, cart:)
+    @checkout = checkout
+    @cart = cart # checkoutに関連付けられたカートから割引情報を取得
+    @total_price = 0
   end
-rescue StandardError => e
-  raise
-  # ログに出力してデバッグしやすくする
-end
 
-private
+  def call
+    ActiveRecord::Base.transaction do
+      create_order_from_checkout
+      create_order_items
+      update_order_total
+      clear_cart
+      send_order_confirmation_email
+    end
+  rescue StandardError
+    raise
+    # ログに出力してデバッグしやすくする
+  end
+
+  private
 
   # Orderの作成 checkoutからデータ取得
   def create_order_from_checkout
@@ -32,7 +32,6 @@ private
       promotion_code: cart.promotion_code
     )
   end
-
 
   # CartItemからOrderItemを作成し、購入時点の情報を保存
   def create_order_items
@@ -63,7 +62,7 @@ private
     @cart.cart_items.destroy_all
     reset_promo_code
   end
-  
+
   def reset_promo_code
     @cart.update!(promotion_code: nil, discount_amount: nil)
   end
