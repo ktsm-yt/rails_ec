@@ -3,6 +3,7 @@ class Checkout < ApplicationRecord
   belongs_to :state
   belongs_to :cart
   has_one :credit_card, dependent: :destroy
+  has_one :order
 
   # TODO: 一つのbuttonから2つのモデルcreditとcheckoutを取ってこなきゃならない
   # CreditCardの属性をCheckoutフォームからまとめて受け取れるようにする
