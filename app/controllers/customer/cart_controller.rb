@@ -69,7 +69,7 @@ class Customer::CartController < ApplicationController
 
   def update_cart_item_quantity(quantity)
     if quantity.positive?
-      if @cart_item.update(quantity: quantity)
+      if @cart_item.update(quantity:)
         flash[:notice] = '数量を更新しました'
       else
         flash[:alert] = @cart_item.errors.full_messages.join(', ') # エラーメッセージを表示
@@ -78,7 +78,5 @@ class Customer::CartController < ApplicationController
       @cart_item.destroy
       flash[:notice] = 'カートから商品を削除しました'
     end
-
-    true # 処理完了
   end
 end

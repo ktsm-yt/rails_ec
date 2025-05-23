@@ -1,33 +1,41 @@
 class Customer::CheckoutsController < ApplicationController
   before_action :set_current_cart, only: :create
-
-  # continue to checkout
+  before_action :ensure_cart_has_items, only: :create
+  
   def create
-    if @current_cart.nil? || @current_cart.cart_items.empty?
-      redirect_to cart_path, alert: 'カートが空か,無効です'
-      return
-    end
     @checkout = @current_cart.build_checkout(checkout_params)
 
     if @checkout.save
-      begin
-        OrderProcessor.new(checkout: @checkout, cart: @current_cart).call
-        redirect_to products_path, notice: '購入ありがとうございます'
-      rescue StandardError => e
-        log_error(e)
-        flash.now[:alert] = '注文処理中にエラーが発生しました。もう一度お試しください。'
-        redirect_to cart_path
-      end
-    else
-      # PRGパターン
-      # フォームデータをセッションに保存
-      session[:checkout_params] = checkout_params
-      flash[:alert] = @checkout.errors.full_messages.join('<br>')
-      redirect_to cart_path
+      process_order
+    else 
+      handle_checkout_errors
     end
   end
 
   private
+
+  def ensure_cart_has_items
+    return if @current_cart&.cart_items&.any? # ぼっち nilが出てもエラーを出さずnilを返す。
+    redirect_to cart_path, alert: 'カートが空か,無効です'
+  end
+
+  def process_order
+    result = OrderProcessor.new(checkout: @checkout, cart: @current_cart).call
+    
+    if result[:success]
+      redirect_to products_path, notice: '購入ありがとうございます'
+    else
+      redirect_to cart_path, alert: '注文処理中にエラーが発生しました。もう一度お試しください。'
+    end
+  end
+    # PRGパターン
+    # フォームデータをセッションに保存
+  def handle_checkout_errors
+    session[:checkout_params] = checkout_params
+    redirect_to cart_path, alert: @checkout.errors.full_messages.join('\n')
+  end
+
+
 
   def checkout_params
     params.require(:checkout).permit(
