@@ -25,6 +25,7 @@ Rails.application.routes.draw do
       delete 'remove_item/:id', action: :remove_item, as: :remove_item
 
       post 'save_checkout_draft', on: :collection
+      post :apply_promo_code, on: :collection
     end
 
     resource :checkout, only: [:create]

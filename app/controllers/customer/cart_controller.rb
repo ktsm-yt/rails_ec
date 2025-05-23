@@ -2,11 +2,11 @@ class Customer::CartController < ApplicationController
   include Customer::CheckoutFormHandler
 
   before_action :set_current_cart
+  before_action :load_cart_items, only: %i[show update_item remove_item ]
   before_action :set_cart_item, only: %i[update_item remove_item]
   rescue_from ActiveRecord::RecordNotFound, with: :handle_record_not_found
 
   def show
-    @cart_items = @current_cart.cart_items.includes(:product).order(created_at: :asc)
     set_location_data
     initialize_checkout_form
   end
@@ -31,7 +31,6 @@ class Customer::CartController < ApplicationController
 
   def remove_item
     @cart_item.destroy
-    load_cart_items
     flash.now[:notice] = 'カートから商品を削除しました'
 
     respond_to do |format|
@@ -56,6 +55,10 @@ class Customer::CartController < ApplicationController
   # 必然性のある項目なので例外の出るfindをあえて利用
   def set_cart_item
     @cart_item = @current_cart.cart_items.find(params[:id])
+  end
+
+  def load_cart_items
+    @cart_items = @current_cart.cart_items.includes(:product).order(created_at: :asc)
   end
 
   # Product.find または CartItem.find で ActiveRecord::RecordNotFound が発生した場合
