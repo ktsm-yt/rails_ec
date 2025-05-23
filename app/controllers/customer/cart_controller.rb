@@ -1,6 +1,5 @@
 class Customer::CartController < ApplicationController
   include Customer::CheckoutFormHandler
-
   before_action :set_current_cart
   before_action :load_cart_items, only: %i[show update_item remove_item ]
   before_action :set_cart_item, only: %i[update_item remove_item]
@@ -14,28 +13,31 @@ class Customer::CartController < ApplicationController
   # current_cartは現在のユーザーセッションに関連付けられているCartのobj
   def add_item
     product = Product.find(params[:product_id]) # Product.objを見つけ
-    quantity = params[:quantity].present? ? params[:quantity].to_i : 1 # nilなら1に
+    quantity = params[:quantity].to_i.positive? ? params[:quantity].to_i : 1 # nilなら1に
 
     @current_cart.add_product(product, quantity) # 数量を渡してCartクラスのadd_productを呼び出し
     @current_cart.save # DBへ保存し,カートを離れても有効に
-
     redirect_to root_path, notice: "「#{product.name}」をカートに追加しました"
   end
 
   # カートの数値の直接更新
   def update_item
     quantity = params[:quantity].to_i
-
-    update_cart_item_quantity(quantity)
+    handle_cart_item_update(quantity)
   end
 
   def remove_item
     @cart_item.destroy
-    flash.now[:notice] = 'カートから商品を削除しました'
+    message = 'カートから商品を削除しました'
 
-    respond_to do |format|
-      format.html {redirect_to cart_path, notice: 'カートから商品を削除しました'}
-      format.turbo_stream
+    if @current_cart.cart_items.empty?
+      redirect_to products_path, notice: message
+    else
+      respond_to do |format|
+        flash.now[:notice] = message # turbo stream用
+        format.html { redirect_to cart_path, notice: message } # カートページに留まる
+        format.turbo_stream
+      end
     end
   end
 
@@ -66,31 +68,38 @@ class Customer::CartController < ApplicationController
     redirect_to cart_path, alert: '指定されたアイテムは見つかりませんでした'
   end
 
-  def update_cart_item_quantity(quantity)
+  def handle_cart_item_update(quantity)
+    message = ''
+    flash_type = :notice
+    operation_succeeded = true # 更新または削除が成功したかどうかのフラグ
+    item_destroyed = false     # アイテムが削除されたかどうかのフラグ    
+
     if quantity.positive?
-      if @cart_item.update(quantity: quantity)
-        load_cart_items
-        flash.now[:notice] = '数量を更新しました'
-        respond_to do |format|
-          format.html {redirect_to cart_path, notice: '数量を更新しました'}
-          format.turbo_stream
-        end
-      else
-        flash.now[:alert] = @cart_item.errors.full_messages.join(', ') # エラーメッセージを表示
-        respond_to do |format|
-          format.html {redirect_to root_path, alert: @cart_item.errors.full_messages.join(', ')}
-          format.turbo_stream do
-            render turbo_stream: turbo_stream.update('flash-messages', partial: 'shared/flash_messages')
-          end
-        end
+      if @cart_item.update(quantity:)
+        message = '数量を更新しました'
+      else # 更新失敗
+        message = @cart_item.errors.full_messages.join(', ')
+        flash_type = :alert # フラグ更新
+        operation_succeeded = false # フラグ更新
       end
-    else
-      @cart_item.destroy
-      load_cart_items
-      flash.now[:notice] = 'カートから商品を削除しました'
-      respond_to do |format|
-        format.html { redirect_to cart_path, notice: 'カートから商品を削除しました' } # HTMLリクエストの場合はリダイレクト（フォールバック）
-        format.turbo_stream # update_item.turbo_stream.erb をレンダリング（削除されたアイテムは表示されなくなる）
+    else # quantityが0以下の場合
+      destroy_cart_item_and_set_message
+    end
+
+    # turbo_streamで表示するために商品を削除
+    # HTMLリクエストのときはredirect_toのオプションでflashが設定される
+    flash.now[flash_type] = message
+    load_cart_items if operation_succeeded
+
+
+    respond_to do |format|
+      format.html { redirect_to cart_path, flash_type => message } # 普通の語尾: は使えないので=>
+      if operation_succeeded
+        format.turbo_stream
+      else # 更新失敗
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.update('flash-messages', partial: 'shared/flash_messages')
+        end
       end
     end
   end
