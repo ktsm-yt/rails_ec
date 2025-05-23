@@ -7,6 +7,7 @@
       <th>購入者</th>
       <th>メールアドレス</th>
       <th>合計金額</th>
+      <th>割引額</th>
       <th>注文日時</th>
       <th>アクション</th>
     </tr>
@@ -18,6 +19,7 @@
         <td><%= order.customer_name %></td>
         <td><%= order.customer_email %></td>
         <td><%= number_to_currency(order.total_price, unit: "$") %></td>
+        <td><%= number_to_currency(order.discount_amount, unit: "$") %></td>
         <td><%= l(order.created_at, format: :long) %></td>
         <%# lって何メソッド?%>
         <td><%= link_to '詳細', admin_order_path(order) %></td>

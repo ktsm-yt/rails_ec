@@ -11,5 +11,8 @@
     </li>
   <% end %>
 </ul>
+<% if @order.discount_amount.present? && @order.discount_amount > 0 %>
+  <p>プロモーションコード割引: <%= number_to_currency(@order.discount_amount, unit: "$") %></p>
+<% end %>
 <p>合計金額: <%= number_to_currency(@order.total_price, unit: "$")%></p>
 <p>またのご利用をお待ちしております。</p>

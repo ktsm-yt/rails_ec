@@ -39,5 +39,5 @@
       <% end %>
     </div>
   </div>
-  <span class="text-body-secondary"><%= number_to_currency(item.product.price * item.quantity) %></span>
+  <span class="text-body-secondary"><%= number_to_currency(item.quantity * item.product.price) %></span>
 </li>

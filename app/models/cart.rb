@@ -15,22 +15,37 @@ class Cart < ApplicationRecord
     end
   end
 
-  # # 使ってないメソッド
-  # def remove_product(product, quantity = 1)
-  #   current_item = find_item_by_product(product)
+  def apply_promo_code(code)
+    # 有効なcodeを探す
+    promotion_code = PromotionCode.find_by(code: code, active: true, used: false)
+    if promotion_code
+      apply_discount(promotion_code.discount_amount)
+      # カートにコードの文字列を保存
+      update(promotion_code: promotion_code.code)
+      promotion_code.update(used: true) # DB更新 使い切り
+      # 戻り値をハッシュで返す と意味が明確。情報を複数送ることもできる
+      { success: true }
+    else
+      { success: false, message: '無効なプロモーションコードです' }
+    end
 
-  #   return unless current_item # アイテムが存在するか
+    redirect_to cart_path
+  end
 
-  #   if current_item.quantity > 1
-  #     current_item.quantity -= quantity
-  #     current_item.save # 数量が2以上の場合は1減らす
-  #   else
-  #     current_item.destroy # 数量が1の場合はアイテムを削除
-  #   end
-  # end
+  # 割引適用
+  def apply_discount(amount)
+    # 自身のDBを更新
+    self.discount_amount = amount
+    save
+  end
+
+  def subtotal_price
+    cart_items.sum { |item| item.product.price * item.quantity }
+  end
 
   def total_price
-    cart_items.sum { |item| item.product.price * item.quantity }
+    subtotal_price
+    [subtotal_price - (discount_amount || 0), 0].max # 0以下になったら0にする
   end
 
   private
