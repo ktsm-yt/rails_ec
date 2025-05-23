@@ -1,0 +1,42 @@
+<div class="row g-3">
+  <div class="col-12">
+    <%= f.label :name, "商品名", class: "form-label" %>
+    <%= f.text_field :name, class: "form-control", placeholder: "商品名を入力してください" %>
+  </div>
+  <div class="col-12">
+    <%= f.label :description, "商品詳細", class: "form-label" %>
+    <%= f.text_area :description, class: "form-control", rows: 5, placeholder: "商品の詳細を入力してください" %>
+  </div>
+  <div class="col-md-6">
+    <%= f.label :price, "販売価格", class: "form-label" %>
+    <div class="input-group">
+      <span class="input-group-text">$</span>
+      <%= f.number_field :price, class: "form-control", min: 0 %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <%= f.label :original_price, "定価", class: "form-label" %>
+    <div class="input-group">
+      <span class="input-group-text">$</span>
+      <%= f.number_field :original_price, class: "form-control", min: 0 %>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <%= f.label :stock, "在庫数", class: "form-label" %>
+    <%= f.number_field :stock, class: "form-control", min: 0 %>
+  </div>
+  <div class="col-12">
+    <%= f.label :image, "商品画像", class: "form-label" %>
+    <%= f.file_field :image, class: "form-control" %>
+  </div>
+  <div class="form-check">
+    <%= f.check_box :on_sale, class: "form-check-input" %>
+    <%= f.label :on_sale, "セール中", class: "form-check-label" %>
+  </div>
+  <hr class="my-4">
+  <div class="d-grid gap-2">
+    <%= f.submit "更新する", class: "btn btn-primary btn-lg" %>
+    <%= link_to "戻る", admin_products_path, class: "btn btn-outline-secondary" %>
+  </div>
+</div>
+
