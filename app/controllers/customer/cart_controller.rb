@@ -23,22 +23,13 @@ class Customer::CartController < ApplicationController
   # カートの数値の直接更新
   def update_item
     quantity = params[:quantity].to_i
-    handle_cart_item_update(quantity)
+    message, flash_type, operation_succeeded = set_update_status(@cart_item.update(quantity:))
+    render_cart_response(message, flash_type, operation_succeeded)
   end
 
   def remove_item
-    @cart_item.destroy
-    message = 'カートから商品を削除しました'
-
-    if @current_cart.cart_items.empty?
-      redirect_to products_path, notice: message
-    else
-      respond_to do |format|
-        flash.now[:notice] = message # turbo stream用
-        format.html { redirect_to cart_path, notice: message } # カートページに留まる
-        format.turbo_stream
-      end
-    end
+    message, flash_type, operation_succeeded = set_remove_status(@cart_item.destroy)
+    render_cart_response(message, flash_type, operation_succeeded)
   end
 
   def destroy
@@ -69,31 +60,41 @@ class Customer::CartController < ApplicationController
   end
 
   def handle_cart_item_update(quantity)
-    message = ''
-    flash_type = :notice
-    operation_succeeded = true # 更新または削除が成功したかどうかのフラグ
-    item_destroyed = false     # アイテムが削除されたかどうかのフラグ    
+    message, flash_type, operation_succeeded = set_update_status(@cart_item.update(quantity:))
+    render_cart_response(message, flash_type, operation_succeeded)
+  end
 
-    if quantity.positive?
-      if @cart_item.update(quantity:)
-        message = '数量を更新しました'
-      else # 更新失敗
-        message = @cart_item.errors.full_messages.join(', ')
-        flash_type = :alert # フラグ更新
-        operation_succeeded = false # フラグ更新
-      end
-    else # quantityが0以下の場合
-      destroy_cart_item_and_set_message
+  # カートアイテム削除時のステータスを設定
+  def set_remove_status(success)
+    if success
+      ['カートから商品を削除しました', :notice, true]
+    else # 削除失敗
+      ['商品の削除に失敗しました', :alert, false]
     end
+  end
 
-    # turbo_streamで表示するために商品を削除
-    # HTMLリクエストのときはredirect_toのオプションでflashが設定される
+  # カートアイテム更新時のステータスを設定
+  def set_update_status(success)
+    if success
+      ['数量を更新しました', :notice, true]
+    else # 更新失敗
+      [@cart_item.errors.full_messages.join(', '), :alert, false]
+    end
+  end
+
+
+  # カート操作後のレスポンスをレンダリング
+  def render_cart_response(message, flash_type, operation_succeeded)
     flash.now[flash_type] = message
     load_cart_items if operation_succeeded
 
-
     respond_to do |format|
-      format.html { redirect_to cart_path, flash_type => message } # 普通の語尾: は使えないので=>
+      if @current_cart.cart_items.empty? && operation_succeeded
+        format.html { redirect_to products_path, notice: message }
+      else
+        format.html { redirect_to cart_path, flash_type => message }
+      end
+
       if operation_succeeded
         format.turbo_stream
       else # 更新失敗
