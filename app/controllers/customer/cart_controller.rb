@@ -67,17 +67,18 @@ class Customer::CartController < ApplicationController
 
   def handle_successful_cart_operation(message, template_name)
     load_cart_items
-    @current_cart.reload
+    @current_cart.reload # 呼ばれた段階のカートを更新したらリロードする
+
+    if @current_cart.cart_items.empty? # 最後の一つが削除されたとき
+      redirect_to root_path, notice: message
+      return
+    end
 
     respond_to do |format|
-      format.html {redirect_to cart_path, notice: message}
+      format.html {redirect_to root_path, notice: message}
       format.turbo_stream do
         flash.now[:notice] = message
-        if @current_cart.cart_items.empty?
-          render 'customer/cart/show'
-        else
-          render template_name
-        end
+        render template_name
       end
     end
   end

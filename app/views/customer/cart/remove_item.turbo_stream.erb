@@ -21,16 +21,13 @@
   <%= render 'shared/flash_messages' %>
 <% end %>
 
+
 <%# カートが空になった場合、全体を更新 %>
 <% if @cart_items.empty? %>
   <%= turbo_stream.update '.row.g-5' do %>
     <div class="py-5 text-center">
       <p>カートに商品がありません。</p>
-      <%= link_to '商品一覧に戻る', products_path, class: 'btn btn-primary' %>
-    </div>
-  <% end %>
-<% end %>
-      <%= link_to '商品一覧に戻る', products_path, class: 'btn btn-primary' %>
+      <%= link_to '商品一覧に戻る', root_path, class: 'btn btn-primary' %>
     </div>
   <% end %>
 <% end %>
