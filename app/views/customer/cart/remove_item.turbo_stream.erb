@@ -7,7 +7,7 @@
 <% end %>
 
 <%# カートアイテム数の更新 %>
-<%= turbo_stream.update '.badge.bg-primary.rounded-pill' do %>
+<%= turbo_stream.update 'cart-count' do %>
   <%= @cart_items.sum(:quantity) %>
 <% end %>
 

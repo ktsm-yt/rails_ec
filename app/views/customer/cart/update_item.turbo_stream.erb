@@ -12,7 +12,7 @@
 <% end %>
 
 <%# カートアイテム数の更新 %>
-<%= turbo_stream.update 'cart-items-count' do %>
+<%= turbo_stream.update 'cart-count' do %>
   <%= @cart_items.sum(:quantity) %>
 <% end %>
 
