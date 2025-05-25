@@ -6,6 +6,11 @@
   <%= number_to_currency(@current_cart.total_price) %>
 <% end %>
 
+<%# ナビゲーションバーのカートアイテム数の更新 %>
+<%= turbo_stream.update 'nav-cart-count' do %>
+  <%= @cart_items.sum(:quantity) %>
+<% end %>
+
 <%# カートアイテム数の更新 %>
 <%= turbo_stream.update 'cart-count' do %>
   <%= @cart_items.sum(:quantity) %>
@@ -21,6 +26,10 @@
   <%= turbo_stream.update '.row.g-5' do %>
     <div class="py-5 text-center">
       <p>カートに商品がありません。</p>
+      <%= link_to '商品一覧に戻る', products_path, class: 'btn btn-primary' %>
+    </div>
+  <% end %>
+<% end %>
       <%= link_to '商品一覧に戻る', products_path, class: 'btn btn-primary' %>
     </div>
   <% end %>
