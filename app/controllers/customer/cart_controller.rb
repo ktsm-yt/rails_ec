@@ -25,7 +25,7 @@ class Customer::CartController < ApplicationController
 
   def update_item
     if @cart_item.update(cart_item_params)
-      handle_successful_cart_operation(t('customer.cart.update_item.success'))
+      handle_successful_cart_operation(t('.success'), :update_item)
     else
       handle_failed_cart_operation(@cart_item.errors.full_messages.join(', '))
     end
@@ -33,7 +33,7 @@ class Customer::CartController < ApplicationController
 
   def remove_item
     if @cart_item.destroy
-      handle_successful_cart_operation(t('.success'))
+      handle_successful_cart_operation(t('.success'), :remove_item)
     else
       handle_failed_cart_operation(t('.failure'))
     end
@@ -65,21 +65,19 @@ class Customer::CartController < ApplicationController
     redirect_to cart_path, alert: t('errors.messages.record_not_found_item')
   end
 
-  def handle_successful_cart_operation(message)
+  def handle_successful_cart_operation(message, template_name)
     load_cart_items
+    @current_cart.reload
 
     respond_to do |format|
-      format.html do
-        if @current_cart.cart_items.empty?
-          redirect_to products_path, notice: message
-        else
-          redirect_to cart_path, notice: message
-        end
-      end
+      format.html {redirect_to cart_path, notice: message}
       format.turbo_stream do
         flash.now[:notice] = message
-        render turbo_stream: turbo_stream.update('flash-messages',
-                                                partial: 'shared/flash_messages')
+        if @current_cart.cart_items.empty?
+          render 'customer/cart/show'
+        else
+          render template_name
+        end
       end
     end
   end
