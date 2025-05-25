@@ -1,6 +1,5 @@
 import { Application } from "@hotwired/stimulus"
 import CheckoutFormController from './checkout_form_controller'
-import "./controllers"
 
 const application = Application.start()
 

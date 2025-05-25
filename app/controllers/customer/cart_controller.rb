@@ -12,34 +12,36 @@ class Customer::CartController < ApplicationController
 
   # current_cartは現在のユーザーセッションに関連付けられているCartのobj
   def add_item
-    product = Product.find(params[:product_id]) # Product.objを見つけ
+    product = Product.find(product_params[:product_id]) # Product.objを見つけ
     quantity = [params[:quantity].to_i,1].max # -,0でも1に
-
     @current_cart.add_product(product, quantity) # Cartより
+
     if @current_cart.save # DBへ保存し,カートを離れても有効に
       redirect_to root_path, notice: "「#{product.name}」をカートに追加しました"
     else
-      redirect_to root_path, alert: 
+      redirect_to root_path, alert: t('.failure', errors: @current_cart.errors.full_messages.join(', '))
+    end
   end
 
-  # カートの数値の直接更新
   def update_item
     if @cart_item.update(cart_item_params)
-      handle_successful_cart_operation()
+      handle_successful_cart_operation(t('customer.cart.update_item.success'))
     else
       handle_failed_cart_operation(@cart_item.errors.full_messages.join(', '))
     end
   end
 
   def remove_item
-    handle_successful_cart_operation()
+    if @cart_item.destroy
+      handle_successful_cart_operation(t('.success'))
     else
-    handle_failed_cart_operation()
+      handle_failed_cart_operation(t('.failure'))
+    end
   end
 
   def destroy
     @current_cart.cart_items.destroy_all
-    redirect_to root_path, notice: 'カートを空にしました'
+    redirect_to root_path, notice: t('.success')
   end
 
   def save_checkout_draft
@@ -59,9 +61,8 @@ class Customer::CartController < ApplicationController
     @cart_items = @current_cart.cart_items.includes(:product).order(created_at: :asc)
   end
 
-  # Product.find または CartItem.find で ActiveRecord::RecordNotFound が発生した場合
   def handle_record_not_found
-    redirect_to cart_path, alert: '指定されたアイテムは見つかりませんでした'
+    redirect_to cart_path, alert: t('errors.messages.record_not_found_item')
   end
 
   def handle_successful_cart_operation(message)
@@ -72,21 +73,33 @@ class Customer::CartController < ApplicationController
         if @current_cart.cart_items.empty?
           redirect_to products_path, notice: message
         else
-          redirect_to cart_path, noticeL message
+          redirect_to cart_path, notice: message
         end
       end
-      format.turbo_stream
+      format.turbo_stream do
+        flash.now[:notice] = message
+        render turbo_stream: turbo_stream.update('flash-messages',
+                                                partial: 'shared/flash_messages')
+      end
     end
   end
 
   def handle_failed_cart_operation(error_message)
     respond_to do |format|
-      format.html { redirect_to products_path, alert: message }
+      format.html { redirect_to products_path, alert: error_message }
       format.turbo_stream do
         flash.now[:alert] = error_message
         render turbo_stream: turbo_stream.update('flash-messages',
                                                 partial: 'shared/flash_messages')
       end
     end
+  end
+
+  def product_params
+    params.permit(:product_id, :quantity)
+  end
+
+  def cart_item_params
+    params.permit(:quantity)
   end
 end

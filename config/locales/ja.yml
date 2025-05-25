@@ -20,7 +20,22 @@ ja:
         card_number: "カード番号"
         expiration_month: "有効期限 月"
         expiration_year: "有効期限 年"
-          
+  customer:
+    cart:
+      add_item:
+        success: "「%{product_name}」をカートに追加しました"
+        failure: "カートへの追加に失敗しました: %{errors}"
+      update_item:
+        success: "カートの商品を更新しました。"
+      remove_item:
+        success: "カートから商品を削除しました"
+        failure: "商品の削除に失敗しました"
+      destroy:
+        success: "カートを空にしました"
+      errors:
+        messages:
+          record_not_found_item: "指定されたアイテムは見つかりませんでした。"
+
   date:
     abbr_day_names:
     - 日
@@ -125,6 +140,7 @@ ja:
       too_long: は%{count}文字以内で入力してください
       too_short: は%{count}文字以上で入力してください
       wrong_length: は%{count}文字で入力してください
+      record_not_found_item: "指定されたアイテムは見つかりませんでした。"
     template:
       body: 次の項目を確認してください
       header: "%{model}に%{count}個のエラーが発生しました"
