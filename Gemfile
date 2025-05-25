@@ -1,9 +1,8 @@
 # frozen_string_literal: true
-
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '3.3.4'
+ruby '3.4.2'
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem 'rails'
@@ -38,10 +37,6 @@ gem "redis"
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 gem "kredis"
 
-
-# Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
-# gem "bcrypt", "~> 3.1.7"
-
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 
@@ -51,7 +46,7 @@ gem 'bootsnap', require: false
 # Use Sass to process CSS
 gem "sassc-rails"
 
-gem 'bootstrap', '~> 5.2.3'
+gem 'bootstrap'
 
 gem 'sidekiq'
 
@@ -79,12 +74,6 @@ group :development do
   gem 'foreman'
   gem 'letter_opener_web'
   gem 'ruby-lsp', require: false
-
-  # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
-  # gem "rack-mini-profiler"
-
-  # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
-  # gem "spring"
 end
 
 group :test do
