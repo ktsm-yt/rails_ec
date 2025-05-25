@@ -16,7 +16,6 @@
           <% end %>
         </div>
         <div class="fs-5 mb-5">
-
           <% if @product.on_sale? && @product.price.present? %>
             <span class="text-decoration-line-through"><%= number_to_currency(@product.price) %></span>
           <% end %>
@@ -25,7 +24,6 @@
           <% else %>
             <%= number_to_currency(@product.price) %>
           <% end %>
-
         </div>
         <p class="lead"><%= @product.description %></p>
         <%= form_with url: add_item_cart_path(product_id: @product.id), method: :post, local: true do |form| %>

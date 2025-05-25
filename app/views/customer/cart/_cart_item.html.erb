@@ -4,7 +4,6 @@
     <div class="d-flex">
       <%= form_with url: update_item_cart_path(item), method: :patch, class: 'd-flex' do %>
         <%= number_field_tag :quantity, item.quantity, min: 1, max: 99, class: "form-control form-control-sm" %>
-
         <%= button_tag type: 'submit', class: 'btn btn-sm btn-outline-secondary ms-1' do %>
           <i class="bi bi-arrow-clockwise"></i>
         <% end %>

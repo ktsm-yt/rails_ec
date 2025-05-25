@@ -1,7 +1,7 @@
 class Customer::CartController < ApplicationController
   include Customer::CheckoutFormHandler
   before_action :set_current_cart
-  before_action :load_cart_items, only: %i[show update_item remove_item ]
+  before_action :load_cart_items, only: %i[show update_item remove_item]
   before_action :set_cart_item, only: %i[update_item remove_item]
   rescue_from ActiveRecord::RecordNotFound, with: :handle_record_not_found
 
@@ -13,7 +13,7 @@ class Customer::CartController < ApplicationController
   # current_cartは現在のユーザーセッションに関連付けられているCartのobj
   def add_item
     product = Product.find(product_params[:product_id]) # Product.objを見つけ
-    quantity = [params[:quantity].to_i,1].max # -,0でも1に
+    quantity = [params[:quantity].to_i, 1].max # -,0でも1に
     @current_cart.add_product(product, quantity) # Cartより
 
     if @current_cart.save # DBへ保存し,カートを離れても有効に
@@ -40,7 +40,7 @@ class Customer::CartController < ApplicationController
   end
 
   def destroy
-    Rails.logger.info "Cart destroy action called!"
+    Rails.logger.info 'Cart destroy action called!'
     @current_cart.cart_items.destroy_all
     redirect_to root_path, notice: t('.success')
   end
@@ -76,7 +76,7 @@ class Customer::CartController < ApplicationController
     end
 
     respond_to do |format|
-      format.html {redirect_to cart_path, notice: message}
+      format.html { redirect_to cart_path, notice: message }
       format.turbo_stream do
         flash.now[:notice] = message
         render template_name
@@ -90,7 +90,7 @@ class Customer::CartController < ApplicationController
       format.turbo_stream do
         flash.now[:alert] = error_message
         render turbo_stream: turbo_stream.update('flash-messages',
-                                                partial: 'shared/flash_messages')
+                                                 partial: 'shared/flash_messages')
       end
     end
   end
