@@ -1,39 +1,19 @@
-<li class="list-group-item d-flex justify-content-between lh-sm">
+<li class="list-group-item d-flex justify-content-between lh-sm" id="<%= dom_id(item)%>" >
   <div>
     <h5 class="my-0 "><%= item.product.name %></h5>
     <div class="d-flex">
-      <%= form_with url: update_item_cart_path(item), method: :patch, data: { turbo: false },class: 'd-flex' do %>
+      <%= form_with url: update_item_cart_path(item), method: :patch, class: 'd-flex' do %>
         <%= number_field_tag :quantity, item.quantity, min: 1, max: 99, class: "form-control form-control-sm" %>
-        <% if @checkout.present? %>
-          <%# 基本フィールド %>
-          <div style="width: 0; height: 0; overflow: hidden; position: absolute; top: -9999px; left: -9999px;">
-            <%= text_field_tag :first_name, @checkout.first_name %>
-            <%= text_field_tag :last_name, @checkout.last_name %>
-            <%= text_field_tag :username, @checkout.username %>
-            <%= text_field_tag :email, @checkout.email %>
-            <%= text_field_tag :address1, @checkout.address1 %>
-            <%= text_field_tag :address2, @checkout.address2 %>
-            <%= text_field_tag :country_id, @checkout.country_id %>
-            <%= text_field_tag :state_id, @checkout.state_id %>
-            <%= text_field_tag :zip, @checkout.zip %>
-            <%= text_field_tag :shipping_same_as_billing, @checkout.shipping_same_as_billing %>
-            <%= text_field_tag :save_info_for_next_time, @checkout.save_info_for_next_time %>
-            <%# クレジットカード情報 %>
-            <% if @checkout.credit_card.present? %>
-              <%= text_field_tag :card_number, @checkout.credit_card.card_number %>
-              <%= text_field_tag :name_on_card, @checkout.credit_card.name_on_card %>
-              <%= text_field_tag :expiration_month, @checkout.credit_card.expiration_month %>
-              <%= text_field_tag :expiration_year, @checkout.credit_card.expiration_year %>
-            <% end %>
-          </div>
-        <% end %>
         <%= button_tag type: 'submit', class: 'btn btn-sm btn-outline-secondary ms-1' do %>
           <i class="bi bi-arrow-clockwise"></i>
         <% end %>
       <% end %>
       <%= button_to remove_item_cart_path(item), 
       method: :delete,
-      data: {turbo_confirm: '本当に削除しますか？'}, 
+      data: {
+        turbo_confirm: '本当に削除しますか？',
+        turbo_stream: true
+      },
       class: 'btn btn-sm btn-outline-secondary ms-2' do %>
         <i class="bi bi-trash"></i>
       <% end %>

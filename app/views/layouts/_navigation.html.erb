@@ -26,7 +26,7 @@
           <%= link_to cart_path, class:"btn btn-outline-dark" do %>
             <i class="bi-cart-fill me-1"></i>
             Cart
-            <span class="badge bg-dark text-white ms-1 rounded-pill"><%= @cart_items.sum(:quantity) %></span> <%# カートの点数は動的に変更 %>
+            <span class="badge bg-dark text-white ms-1 rounded-pill" id="nav-cart-count"><%= @cart_items.sum(:quantity) %></span> <%# カートの点数は動的に変更 %>
           <% end %>
         </div>
       <% end %>

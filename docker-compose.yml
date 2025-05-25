@@ -1,29 +1,55 @@
+
 services:
   db:
-    image: postgres:14-alpine
+    image: postgres:16-alpine
     volumes:
-      - db:/var/lib/postgresql/data
+      - db_data:/var/lib/postgresql/data
     environment:
       - POSTGRES_PASSWORD=password
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   web:
     build: .
-    image: rails_template:latest
+    image: rails_template:1.0.0
     command: bundle exec bin/dev
     volumes:
-      - .:/myapp
-      - bundle:/usr/local/bundle
-      - node_modules:/myapp/node_modules
+      - .:/myapp:cached
+      - bundle_data:/usr/local/bundle:delegated
+      - node_modules_data:/myapp/node_modules:delegated
     ports:
       - "3000:3000"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
     tty: true
+    stdin_open: true # for byebug/debug
+    restart: unless-stopped
+    environment:
+      - RAILS_ENV=development
+      - DATABASE_URL=postgres://postgres:password@db:5432/myapp_development
+      - REDIS_URL=redis://redis:6379/1
+      - BOOTSNAP_CACHE_DIR=/usr/local/bundle/bootsnap # bootsnap cache location
+
   redis:
-    image: redis:latest
+    image: redis:8.0.1-alpine
     volumes:
-      - redis-data:/data
+      - redis_data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5  
+
 volumes:
-  db:
-  bundle:
-  node_modules:
-  redis-data:
+  db_data:
+  bundle_data:
+  node_modules_data:
+  redis_data:

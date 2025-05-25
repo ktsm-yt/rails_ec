@@ -24,8 +24,8 @@
           </div>
         <% end %>
         <!-- Product price-->
-        <% if product.on_sale? %>
-          <span class="text-muted text-decoration-line-through"><%= number_to_currency(product.original_price) %></span>
+        <% if product.on_sale? && product.price.present? %>
+          <span class="text-decoration-line-through"><%= number_to_currency(product.price) %></span>
         <% end %>
         <% if product.price_range? %>
           <%= product.price %>
