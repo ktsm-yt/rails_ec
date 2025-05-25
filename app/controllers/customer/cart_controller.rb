@@ -40,6 +40,7 @@ class Customer::CartController < ApplicationController
   end
 
   def destroy
+    Rails.logger.info "Cart destroy action called!"
     @current_cart.cart_items.destroy_all
     redirect_to root_path, notice: t('.success')
   end
@@ -75,7 +76,7 @@ class Customer::CartController < ApplicationController
     end
 
     respond_to do |format|
-      format.html {redirect_to root_path, notice: message}
+      format.html {redirect_to cart_path, notice: message}
       format.turbo_stream do
         flash.now[:notice] = message
         render template_name
